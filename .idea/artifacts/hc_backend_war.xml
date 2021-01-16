@@ -1,0 +1,14 @@
+<component name="ArtifactManager">
+  <artifact type="war" name="hc_backend:war">
+    <output-path>$PROJECT_DIR$/hc_parent/hc_backend/target</output-path>
+    <properties id="maven-jee-properties">
+      <options>
+        <module>hc_backend</module>
+        <packaging>war</packaging>
+      </options>
+    </properties>
+    <root id="archive" name="hc_backend-1.0-SNAPSHOT.war">
+      <element id="artifact" artifact-name="hc_backend:war exploded" />
+    </root>
+  </artifact>
+</component>
