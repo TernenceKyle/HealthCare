@@ -24,8 +24,11 @@
             </bean>
         </mvc:message-converters>
     </mvc:annotation-driven>
+    <context:component-scan base-package="com.jadenyee.controller"/>
     <!-- 指定应用名称 -->
-    <dubbo:application name="hc_backend" />
+    <dubbo:application name="hc_backend" >
+        <dubbo:parameter key="qos.port" value="33333" />
+    </dubbo:application>
     <!--指定服务注册中心地址-->
     <dubbo:registry address="zookeeper://192.168.23.199:2181"/>
     <!--批量扫描-->
@@ -35,7 +38,7 @@
         check=false 不检查服务提供方，开发阶段建议设置为false
         check=true 启动时检查服务提供方，如果服务提供方没有启动则报错
     -->
-    <dubbo:consumer timeout="600000" check="false"/>
+    <dubbo:consumer timeout="600000" check="true"/>
     <!--文件上传组件-->
     <bean id="multipartResolver"
           class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
