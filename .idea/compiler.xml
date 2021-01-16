@@ -7,6 +7,7 @@
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
         <module name="hc_backend" />
+        <module name="hc_mobile" />
         <module name="hc_service_provider" />
         <module name="hc_common" />
         <module name="hc_interface" />
@@ -16,6 +17,7 @@
       <module name="hc_backend" target="1.8" />
       <module name="hc_common" target="1.8" />
       <module name="hc_interface" target="1.8" />
+      <module name="hc_mobile" target="1.8" />
       <module name="hc_parent" target="1.8" />
       <module name="hc_service_provider" target="1.8" />
     </bytecodeTargetLevel>

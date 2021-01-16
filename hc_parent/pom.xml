@@ -13,6 +13,7 @@
         <module>hc_service_provider</module>
         <module>hc_backend</module>
         <module>hc_interface</module>
+        <module>hc_mobile</module>
     </modules>
     <!--    <properties>-->
 <!--        <maven.compiler.source>8</maven.compiler.source>-->
