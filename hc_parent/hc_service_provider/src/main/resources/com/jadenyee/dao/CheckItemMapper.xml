@@ -3,10 +3,34 @@
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.jadenyee.dao.CheckItemMapper">
+    <sql id="baseSql">
+        SELECT id,code,name,sex,age,price,type,attention,remark FROM t_checkitem
+    </sql>
+    <select id="findAll">
+        <include refid="baseSql"/>
+    </select>
+    <select id="findByCondition" parameterType="string" resultType="com.jadenyee.pojo.CheckItem">
+        <include refid="baseSql"/>
+        <where>
+            <if test="value !=null and value.length>0">
+                code = #{value} or name = #{value}
+            </if>
+        </where>
+    </select>
+    <select id="findById" parameterType="int">
+        <include refid="baseSql"/>
+            WHERE id = #{id}
+    </select>
     <insert id="add" parameterType="com.jadenyee.pojo.CheckItem">
         INSERT INTO t_checkitem(code,name,sex,age,price,type,attention,remark) VALUE(#{code},#{name},#{sex},#{age},#{price},#{type},#{attention},#{remark})
     </insert>
-    <select id="">
-
+    <update id="update" parameterType="com.jadenyee.pojo.CheckItem">
+        UPDATE t_checkitem SET code = #{code},name = #{name},age = #{age},price = #{price},type = #{type},attention = #{attention},remark = #{remark} WHERE id = #{id}
+    </update>
+    <delete id="delete" parameterType="int">
+        DELETE FORM t_checkitem WHERE id = #{id}
+    </delete>
+    <select id="getTotal" resultType="int">
+        SELECT COUNT(id) FROM t_checkitem;
     </select>
 </mapper>

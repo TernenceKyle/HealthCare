@@ -7,3 +7,6 @@
 * hc_backend 服务消费
 * hc_interface 公共接口
 * hc_common  公共依赖
+#### 遇到的问题
+* dubbo RPC 框架 的 qos port 占用问题。缺省的 qos port = 222222
+
