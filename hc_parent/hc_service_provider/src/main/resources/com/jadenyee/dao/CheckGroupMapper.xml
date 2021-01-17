@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jadenyee.dao.CheckGroupMapper">
+    <sql id="baseSql">
+        SELECT id,code,name,helpCode,sex,remark,attention FROM t_checkgroup
+    </sql>
+    <select id="findByCondition" parameterType="string" resultType="com.jadenyee.pojo.CheckGroup">
+        <include refid="baseSql" />
+        <where>
+            <if test="value!=null and value.length>0">
+                AND code = #{value} OR name = #{value} OR helpCode = #{value}
+            </if>
+        </where>
+    </select>
+    <insert id="add" parameterType="com.jadenyee.pojo.CheckGroup" >
+        INSERT INTO t_checkgroup(code,name,helpCode,sex,remark,attention) VALUES(#{code},#{name},#{helpCode},#{sex},#{remark},#{attention})
+    </insert>
+    <delete id="delete" parameterType="int">
+        DELETE FROM t_checkgroup WHERE id = #{id}
+    </delete>
+    <delete id="deleteBind" parameterType="int">
+        DELETE FROM t_checkgroup_checkitem WHERE checkgroup_id = #{id}
+    </delete>
+    <insert id="addBind" >
+        INSERT INTO t_checkgroup_checkitem (checkgroup_id,checkitem_id) VALUES
+        <foreach collection="list" item="id" separator=",">
+            (#{gid},#{id})
+        </foreach>
+    </insert>
+    <update id="update" parameterType="com.jadenyee.pojo.CheckGroup">
+        UPDATE t_checkgroup
+        <set>
+            <if test="code != null">
+                code = #{code},
+            </if>
+            <if test="name!= null">
+                name = #{name},
+            </if>
+            <if test="sex != null">
+                sex = #{sex},
+            </if>
+            <if test="remark != null">
+                remark = #{remark},
+            </if>
+            <if test="attention != null">
+                attention = #{attention},
+            </if>
+        </set>
+            WHERE id = #{id}
+    </update>
+</mapper>
