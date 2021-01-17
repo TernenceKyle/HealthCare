@@ -17,7 +17,7 @@
             </if>
         </where>
     </select>
-    <select id="findById" parameterType="int">
+    <select id="findById" parameterType="int" resultType="com.jadenyee.pojo.CheckItem">
         <include refid="baseSql"/>
             WHERE id = #{id}
     </select>
@@ -28,7 +28,7 @@
         UPDATE t_checkitem SET code = #{code},name = #{name},age = #{age},price = #{price},type = #{type},attention = #{attention},remark = #{remark} WHERE id = #{id}
     </update>
     <delete id="delete" parameterType="int">
-        DELETE FORM t_checkitem WHERE id = #{id}
+        DELETE FROM t_checkitem WHERE id = #{id}
     </delete>
     <select id="getTotal" resultType="int">
         SELECT COUNT(id) FROM t_checkitem;

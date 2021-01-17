@@ -233,6 +233,15 @@
         methods: {
             //编辑
             handleEdit() {
+                axios.post("/checkitem/update.do",this.formData).then((res)=>{
+                    if (res.data.flag){
+                        this.$message({ message:res.data.message, type:"success" });
+                    }else {
+                        this.$message.error(res.data.message);
+                    }
+                });
+                this.dialogFormVisible4Edit = false;
+                this.findPage();
             },
             //添加
             handleAdd() {
@@ -245,8 +254,7 @@
                                 //弹出服务端返回的消息
                                 this.$message(
                                     {message: res.data.message, type: "success"});
-                            }
-                            else {
+                            } else {
                                 //弹出添加错误消息提示信息
                                 this.$message.error(res.data.message)
                             }
@@ -264,7 +272,7 @@
                     pageSize: this.pagination.pageSize,
                     queryString: this.pagination.queryString,
                 }
-                axios.post("/checkitem/itemlist.do",queryParam).then((res)=>{
+                axios.post("/checkitem/itemlist.do", queryParam).then((res) => {
                     this.pagination.total = res.data.total;
                     this.dataList = res.data.rows;
                 })
@@ -282,14 +290,33 @@
             },
             // 弹出编辑窗口
             handleUpdate(row) {
+                axios.get("/checkitem/get.do?id="+row.id).then((res)=>{
+                    this.formData = res.data['data'];
+                });
+                this.dialogFormVisible4Edit = true;
             },
             //切换页码
             handleCurrentChange(currentPage) {
                 this.pagination.currentPage = currentPage;
-               this.findPage()
+                this.findPage()
             },
             // 删除
             handleDelete(row) {
+                this.$confirm("确认删除吗？","提示",{type:'warning'}).then(()=>{
+                    axios.post("/checkitem/delete.do",row).then((res) => {
+                        if (res.data.flag) {
+                            this.$message(
+                                {
+                                    message: res.data.message,
+                                    type: 'success'
+                                }
+                            );
+                        } else {
+                            this.$message.error(res.data.message);
+                        }
+                    });
+                    this.findPage();
+                });
             }
         }
     })

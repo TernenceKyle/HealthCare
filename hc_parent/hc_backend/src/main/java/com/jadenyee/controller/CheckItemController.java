@@ -14,42 +14,70 @@ import java.util.Collections;
 import java.util.List;
 
 /*
-*  检查项管理
-*/
+ *  检查项管理
+ */
 @RestController
 @RequestMapping("/checkitem")
 public class CheckItemController {
     @Reference
     private CheckItemService service;
+
     @PostMapping("/add")
-    public Result addCheckItem(@RequestBody CheckItem item){
-        try{
+    public Result addCheckItem(@RequestBody CheckItem item) {
+        try {
             service.addCheckItem(item);
-        }catch (Exception e)
-        {
+        } catch (Exception e) {
             e.printStackTrace();
             return new Result(false, MessageConstant.ADD_CHECKITEM_FAIL);
         }
-        return new Result(true,MessageConstant.ADD_CHECKITEM_SUCCESS);
+        return new Result(true, MessageConstant.ADD_CHECKITEM_SUCCESS);
     }
+
     @RequestMapping("/test")
-    public String testConn(){
+    public String testConn() {
         return "OK!";
     }
-    @RequestMapping("/delete/{id}")
-    public Result deleteCheckItem(@PathVariable Integer id){
-        return service.deleteCheckItem(id)? new Result(true, MessageConstant.DELETE_CHECKITEM_SUCCESS)
-                :new Result(false,MessageConstant.DELETE_CHECKITEM_FAIL);
+
+    /*
+     * 删除 Controller
+     * */
+    @RequestMapping("/delete")
+    public Result deleteCheckItem(@RequestBody CheckItem item) {
+        return service.deleteCheckItem(item.getId()) ? new Result(true, MessageConstant.DELETE_CHECKITEM_SUCCESS)
+                : new Result(false, MessageConstant.DELETE_CHECKITEM_FAIL);
     }
+
     @PostMapping("/itemlist")
-    public PageResult itemList(@RequestBody QueryPageBean bean){
+    public PageResult itemList(@RequestBody QueryPageBean bean) {
         List<CheckItem> byItem = null;
-        try{
+        try {
             return service.findByItem(bean);
-        }catch (Exception e)
-        {
+        } catch (Exception e) {
             e.printStackTrace();
             return new PageResult(0L, Collections.emptyList());
         }
+    }
+
+    @GetMapping("/get")
+    public Result getItemDetail(Integer id) {
+        CheckItem byId = null;
+        try {
+            byId = service.findById(id);
+        }catch (Exception e)
+        {
+            e.printStackTrace();
+            return new Result(false, "获取检查项信息失败!");
+        }
+        return new Result(true,"", byId);
+    }
+    @PostMapping("/update")
+    public Result updateCheckItem(@RequestBody CheckItem item){
+        try{
+            service.updateCheckItem(item);
+        }catch(Exception e){
+            e.printStackTrace();
+            return new Result(false,MessageConstant.EDIT_CHECKGROUP_FAIL);
+        }
+        return new Result(true,MessageConstant.EDIT_CHECKITEM_SUCCESS);
     }
 }

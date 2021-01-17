@@ -36,7 +36,7 @@ public class CheckItemServiceImpl  implements CheckItemService{
 
     @Override
     public CheckItem findById(int id) {
-        return mapper.findById();
+        return mapper.findById(id);
     }
 
     @Override
