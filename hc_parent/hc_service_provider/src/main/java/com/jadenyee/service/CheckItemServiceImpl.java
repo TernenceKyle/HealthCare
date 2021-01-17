@@ -36,12 +36,6 @@ public class CheckItemServiceImpl  implements CheckItemService{
     }
 
     @Override
-    public List<CheckItem> findByPage(int page, int size) {
-        PageHelper.startPage(page,size);
-        return mapper.findAll();
-    }
-
-    @Override
     public CheckItem findById(int id) {
         return mapper.findById(id);
     }
@@ -51,17 +45,13 @@ public class CheckItemServiceImpl  implements CheckItemService{
         Integer currentPage = bean.getCurrentPage();
         Integer pageSize = bean.getPageSize();
         String queryString = bean.getQueryString();
-
-        if (!Objects.nonNull(queryString)) queryString = "";
-
-        if (Objects.nonNull(currentPage)&&Objects.nonNull(pageSize)){
-            PageHelper.startPage(currentPage,pageSize);
-            Page<CheckItem> pageRes = mapper.findByCondition(queryString.trim());
-            return new PageResult(pageRes.getTotal(),pageRes.getResult());
+        if (!Objects.nonNull(queryString)) {
+            queryString = "";
         }
         PageHelper.startPage(1,10);
-        Page<CheckItem> byCondition = mapper.findByCondition(null);
-        return new PageResult(byCondition.getTotal(),byCondition.getResult());
+        Page<CheckItem> pageRes = mapper.findByCondition(queryString.trim());
+        System.out.println(pageRes.getResult());
+        return new PageResult(pageRes.getTotal(),pageRes.getResult());
     }
 
     @Override

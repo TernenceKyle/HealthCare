@@ -84,4 +84,8 @@ public class CheckItemController {
         }
         return new Result(true,MessageConstant.EDIT_CHECKITEM_SUCCESS);
     }
+//    @GetMapping("/items")
+//    public PageResult getAllItems(){
+//        service
+//    }
 }
