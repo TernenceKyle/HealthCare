@@ -24,7 +24,14 @@ public class CheckItemServiceImpl  implements CheckItemService{
     }
 
     @Override
-    public boolean deleteCheckItem(int id) {
+    public boolean deleteCheckItem(int id) throws Exception {
+        //检查当前检测箱是否被检查组关联
+        int bind = mapper.getGroupBindCount(id);
+        //被关联的检查组无法被删除
+        if (bind>0){
+            //抛出异常终止删除操作
+            throw new Exception("该检测项已被检测组关联！不能删除！");
+        }
         return mapper.delete(id);
     }
 

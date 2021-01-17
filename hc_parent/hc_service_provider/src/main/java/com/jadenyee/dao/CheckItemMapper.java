@@ -14,4 +14,5 @@ public interface CheckItemMapper {
     public boolean delete(Integer id);
     public boolean update(CheckItem item);
     public int getTotal();
+    public int getGroupBindCount(int id);
 }

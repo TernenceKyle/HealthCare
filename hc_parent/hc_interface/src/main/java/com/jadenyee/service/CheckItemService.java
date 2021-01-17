@@ -9,7 +9,7 @@ import java.util.List;
 
 public interface CheckItemService {
     public boolean addCheckItem(CheckItem item);
-    public boolean deleteCheckItem(int id);
+    public boolean deleteCheckItem(int id) throws Exception;
     public List<CheckItem> findByPage(int page,int size);
     public CheckItem findById(int id);
     public PageResult findByItem(QueryPageBean bean);

@@ -33,4 +33,7 @@
     <select id="getTotal" resultType="int">
         SELECT COUNT(id) FROM t_checkitem;
     </select>
+    <select id="getGroupBindCount" resultType="int" parameterType="int">
+        SELECT COUNT(checkitem_id) FROM t_checkgroup_checkitem WHERE checkitem_id = #{id}
+    </select>
 </mapper>

@@ -27,7 +27,7 @@ public class CheckItemController {
         try {
             service.addCheckItem(item);
         } catch (Exception e) {
-            e.printStackTrace();
+            System.err.println(e.getMessage());
             return new Result(false, MessageConstant.ADD_CHECKITEM_FAIL);
         }
         return new Result(true, MessageConstant.ADD_CHECKITEM_SUCCESS);
@@ -42,9 +42,13 @@ public class CheckItemController {
      * 删除 Controller
      * */
     @RequestMapping("/delete")
-    public Result deleteCheckItem(@RequestBody CheckItem item) {
-        return service.deleteCheckItem(item.getId()) ? new Result(true, MessageConstant.DELETE_CHECKITEM_SUCCESS)
-                : new Result(false, MessageConstant.DELETE_CHECKITEM_FAIL);
+    public Result deleteCheckItem(@RequestBody CheckItem item) throws Exception {
+        try {
+            service.deleteCheckItem(item.getId());
+        }catch (Exception e){
+            return new Result(false, MessageConstant.DELETE_CHECKITEM_FAIL);
+        }
+        return new Result(true, MessageConstant.DELETE_CHECKITEM_SUCCESS);
     }
 
     @PostMapping("/itemlist")
