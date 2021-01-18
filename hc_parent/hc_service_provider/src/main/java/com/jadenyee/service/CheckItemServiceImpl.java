@@ -48,7 +48,7 @@ public class CheckItemServiceImpl  implements CheckItemService{
         if (!Objects.nonNull(queryString)) {
             queryString = "";
         }
-        PageHelper.startPage(1,10);
+        PageHelper.startPage(currentPage,pageSize);
         Page<CheckItem> pageRes = mapper.findByCondition(queryString.trim());
         System.out.println(pageRes.getResult());
         return new PageResult(pageRes.getTotal(),pageRes.getResult());
@@ -58,6 +58,12 @@ public class CheckItemServiceImpl  implements CheckItemService{
     public boolean updateCheckItem(CheckItem item) {
 
         return mapper.update(item);
+    }
+
+    @Override
+    public PageResult findAll() {
+        List<CheckItem> all = mapper.findAll();
+        return new PageResult((long) all.size(),all);
     }
 
 }

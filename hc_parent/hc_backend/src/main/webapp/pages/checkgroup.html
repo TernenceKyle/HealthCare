@@ -283,9 +283,20 @@
                 //编辑
                 handleEdit() {
                 },
-                //添加
+                // 添加
                 handleAdd () {
-
+                    axios.post("/checkgroup/saveGroup.do?ids="+this.checkitemIds,this.formData).then((res)=>{
+                        if (res.data.flag){
+                            this.$message({
+                                message:res.data.message,
+                                type:'success'
+                            });
+                        }else {
+                            this.$message.error(res.data.message);
+                        }
+                    });
+                    // JSON.stringify(this.formData)
+                    // alert(JSON.stringify(this.checkitemIds));
                 },
                 //分页查询
                 findPage() {
@@ -305,8 +316,12 @@
                 },
                 // 弹出添加窗口
                 handleCreate() {
-                    this.formData = {};
+                    this.resetForm();
                     this.dialogFormVisible = true;
+                    axios.get("/checkitem/items.do").then((res)=>{
+                        this.tableData = res.data.rows;
+                    })
+                    this.findPage();
                 },
                 // 弹出编辑窗口
                 handleUpdate(row) {
@@ -319,6 +334,17 @@
                 },
                 // 删除
                 handleDelete(row) {
+                    axios.get("/checkgroup/delete.do?id="+row.id).then((res)=>{
+                        if (res.data.flag){
+                            this.$message({
+                                message:res.data.message,
+                                type:'success'
+                            });
+                        }else {
+                            this.$message.error(res.data.message);
+                        }
+                    });
+                    this.findPage();
                 }
             }
         })

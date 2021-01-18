@@ -7,9 +7,9 @@ import com.jadenyee.pojo.CheckGroup;
 import java.util.List;
 
 public interface CheckGroupService {
-    public boolean addCheckGroup(CheckGroup Group);
+    public boolean addCheckGroup(CheckGroup Group,Integer[] ids);
     public boolean deleteCheckGroup(int id) throws Exception;
     public CheckGroup findById(int id);
     public PageResult findByContiditon(QueryPageBean bean);
-    public boolean updateCheckGroup(CheckGroup Group);
+    public boolean updateCheckGroup(CheckGroup Group,Integer[] ids);
 }

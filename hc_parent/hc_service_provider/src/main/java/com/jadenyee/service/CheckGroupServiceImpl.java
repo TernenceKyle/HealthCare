@@ -14,19 +14,23 @@ import java.util.Objects;
 public class CheckGroupServiceImpl implements CheckGroupService{
     @Autowired
     private CheckGroupMapper mapper;
+
     @Override
-    public boolean addCheckGroup(CheckGroup Group) {
-        return false;
+    public boolean addCheckGroup(CheckGroup group,Integer[] ids) {
+        boolean add = mapper.add(group);
+        boolean bind = mapper.addBind(group.getId(), ids);
+        return (add&&bind);
+//        return (mapper.add(group) && mapper.addBind(group.getId(),ids));
     }
 
     @Override
     public boolean deleteCheckGroup(int id) throws Exception {
-        return false;
+       return (mapper.deleteBind(id)&&mapper.delete(id));
     }
 
     @Override
     public CheckGroup findById(int id) {
-        return null;
+        return mapper.findById(id);
     }
     /*
     CheckGroup 的分页查询
@@ -45,7 +49,7 @@ public class CheckGroupServiceImpl implements CheckGroupService{
     }
 
     @Override
-    public boolean updateCheckGroup(CheckGroup Group) {
-        return false;
+    public boolean updateCheckGroup(CheckGroup Group,Integer[] ids) {
+        return mapper.deleteBind(Group.getId()) && mapper.update(Group) && mapper.addBind(Group.getId(), ids);
     }
 }

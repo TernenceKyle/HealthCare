@@ -13,4 +13,5 @@ public interface CheckItemService {
     public CheckItem findById(int id);
     public PageResult findByItem(QueryPageBean bean);
     public boolean updateCheckItem(CheckItem item);
+    public PageResult findAll();
 }

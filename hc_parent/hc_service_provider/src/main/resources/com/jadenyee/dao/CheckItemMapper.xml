@@ -6,7 +6,7 @@
     <sql id="baseSql">
         SELECT id,code,name,sex,age,price,type,attention,remark FROM t_checkitem
     </sql>
-    <select id="findAll">
+    <select id="findAll" resultType="com.jadenyee.pojo.CheckItem">
         <include refid="baseSql"/>
     </select>
     <select id="findByCondition" parameterType="string" resultType="com.jadenyee.pojo.CheckItem">

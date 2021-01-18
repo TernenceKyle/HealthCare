@@ -14,7 +14,14 @@
             </if>
         </where>
     </select>
+    <select id="findById" parameterType="int" resultType="com.jadenyee.pojo.CheckGroup">
+        <include refid="baseSql"/>
+            WHERE id = #{id}
+    </select>
     <insert id="add" parameterType="com.jadenyee.pojo.CheckGroup" >
+        <selectKey resultType="java.lang.Integer" order="AFTER" keyProperty="id">
+            SELECT LAST_INSERT_ID()
+        </selectKey>
         INSERT INTO t_checkgroup(code,name,helpCode,sex,remark,attention) VALUES(#{code},#{name},#{helpCode},#{sex},#{remark},#{attention})
     </insert>
     <delete id="delete" parameterType="int">
@@ -23,10 +30,11 @@
     <delete id="deleteBind" parameterType="int">
         DELETE FROM t_checkgroup_checkitem WHERE checkgroup_id = #{id}
     </delete>
-    <insert id="addBind" >
-        INSERT INTO t_checkgroup_checkitem (checkgroup_id,checkitem_id) VALUES
-        <foreach collection="list" item="id" separator=",">
-            (#{gid},#{id})
+    <insert id="addBind">
+        insert into t_checkgroup_checkitem(checkgroup_id,checkitem_id)
+        values
+        <foreach collection="p2" item="id" separator=",">
+            (#{p1},#{id})
         </foreach>
     </insert>
     <update id="update" parameterType="com.jadenyee.pojo.CheckGroup">
