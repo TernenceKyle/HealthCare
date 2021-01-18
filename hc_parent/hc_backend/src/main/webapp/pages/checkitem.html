@@ -240,6 +240,7 @@
                 axios.post("/checkitem/itemlist.do", queryParam).then((res) => {
                     this.pagination.total = res.data.total;
                     this.dataList = res.data.rows;
+                    this.pagination.currentPage = 1;
                 })
             },
             //编辑
@@ -262,6 +263,7 @@
                         this.$message.error("表单数据校验失败");
                         return false;
                     }
+                    this.findPage();
                 });
             },
             //添加
@@ -307,14 +309,15 @@
             // 弹出添加窗口
             handleCreate() {
                 //开启点击新建按钮弹出窗口
-                this.dialogFormVisible = true;
                 this.formData = {};
+                this.dialogFormVisible = true;
             },
             // 弹出编辑窗口
             handleUpdate(row) {
                 axios.get("/checkitem/get.do?id="+row.id).then((res)=>{
                     this.formData = res.data['data'];
                 });
+                this.activeName='first';
                 this.dialogFormVisible4Edit = true;
             },
             //切换页码
@@ -337,6 +340,8 @@
                         } else {
                             this.$message.error(res.data.message);
                         }
+                    }).finally(()=>{
+                        this.findPage();
                     });
                 }).catch(()=>{
                     this.$message({

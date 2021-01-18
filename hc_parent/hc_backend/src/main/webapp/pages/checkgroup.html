@@ -267,11 +267,12 @@
                         currentPage : 1,
                         pageSize:10,
                         queryString:this.pagination.queryString
-                    }
+                    };
                     axios.post("/checkgroup/grouplist.do",param).then((res)=>{
                         this.pagination.total = res.data.total;
                         this.dataList = res.data.rows;
-                    })
+                        this.pagination.currentPage = 1;
+                    });
                 },
                 //编辑
                 handleEdit() {
@@ -326,6 +327,7 @@
                 // 弹出添加窗口
                 handleCreate() {
                     this.resetForm();
+                    this.activeName='first';
                     this.dialogFormVisible = true;
                     axios.get("/checkitem/items.do").then((res)=>{
                         this.tableData = res.data.rows;
@@ -334,6 +336,7 @@
                 // 弹出编辑窗口
                 handleUpdate(row) {
                     this.resetForm();
+                    this.activeName='first';
                     axios.get("/checkgroup/get.do?id="+row.id).then((res)=>{
                         this.formData = res.data;
                     });
