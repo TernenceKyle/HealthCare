@@ -284,9 +284,11 @@
                         }else {
                             this.$message.error(res.data.message);
                         }
+                    }).finally(()=>{
+                        this.findPage();
                     });
                     this.dialogFormVisible4Edit=false;
-                    this.findPage();
+
                 },
                 // 添加
                 handleAdd () {
@@ -299,9 +301,10 @@
                         }else {
                             this.$message.error(res.data.message);
                         }
+                    }).finally(()=>{
+                        this.findPage();
                     });
                     this.dialogFormVisible = false;
-                    this.findPage();
                 },
                 //分页查询
                 findPage() {
@@ -313,7 +316,7 @@
                     axios.post("/checkgroup/grouplist.do",param).then((res)=>{
                         this.pagination.total = res.data.total;
                         this.dataList = res.data.rows;
-                    })
+                    });
                 },
                 // 重置表单
                 resetForm() {
@@ -358,8 +361,9 @@
                         }else {
                             this.$message.error(res.data.message);
                         }
+                    }).finally(()=>{
+                        this.findPage();
                     });
-                    this.findPage();
                 }
             },
             data:{
