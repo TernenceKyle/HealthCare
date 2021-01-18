@@ -10,6 +10,7 @@ import org.apache.dubbo.config.annotation.Reference;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Arrays;
+import java.util.List;
 import java.util.Objects;
 
 @RestController
@@ -17,11 +18,29 @@ import java.util.Objects;
 public class CheckGroupController {
     @Reference
     private CheckGroupService service;
-
+    @GetMapping("/get")
+    public CheckGroup getGroupById(Integer id){
+        try {
+            return service.findById(id);
+        }catch (Exception e)
+        {
+            e.printStackTrace();
+            return null;
+        }
+    }
+    @GetMapping("/groups")
+    public List<CheckGroup> getAllGroups(){
+        return service.findAll();
+    }
+    @GetMapping("/getItems")
+    public int[] getItems(Integer gid){
+        return service.getItems(gid);
+    }
     @PostMapping("/grouplist")
     public PageResult getGroupList(@RequestBody QueryPageBean bean) {
         return service.findByContiditon(bean);
     }
+
     @PostMapping("/saveGroup")
     //疑问一 为什么 不能够转换成 List?
     public Result saveCheckGroup(@RequestBody CheckGroup group,Integer[] ids){
@@ -55,19 +74,5 @@ public class CheckGroupController {
         return  new Result(true,MessageConstant.EDIT_CHECKGROUP_SUCCESS);
     }
 
-    @GetMapping("/get")
-    public CheckGroup getGroupById(Integer id){
-        try {
-            return service.findById(id);
-        }catch (Exception e)
-        {
-            e.printStackTrace();
-            return null;
-        }
-    }
 
-    @GetMapping("/getItems")
-    public int[] getItems(Integer gid){
-        return service.getItems(gid);
-    }
 }
