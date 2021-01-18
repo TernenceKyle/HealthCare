@@ -10,6 +10,7 @@ import org.apache.dubbo.config.annotation.Reference;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Arrays;
+import java.util.Objects;
 
 @RestController
 @RequestMapping("/checkgroup")
@@ -42,6 +43,7 @@ public class CheckGroupController {
         }
         return new Result(true,MessageConstant.DELETE_CHECKGROUP_SUCCESS);
     }
+
     @PostMapping("/update")
     public Result updateCheckGroup(@RequestBody CheckGroup group,Integer[] ids){
         try {
@@ -52,6 +54,7 @@ public class CheckGroupController {
         }
         return  new Result(true,MessageConstant.EDIT_CHECKGROUP_SUCCESS);
     }
+
     @GetMapping("/get")
     public CheckGroup getGroupById(Integer id){
         try {
@@ -62,9 +65,9 @@ public class CheckGroupController {
             return null;
         }
     }
+
     @GetMapping("/getItems")
     public int[] getItems(Integer gid){
-        int[] items = service.getItems(gid);
-        return items;
+        return service.getItems(gid);
     }
 }

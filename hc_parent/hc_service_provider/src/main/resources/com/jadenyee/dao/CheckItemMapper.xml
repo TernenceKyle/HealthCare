@@ -13,7 +13,7 @@
         <include refid="baseSql"/>
         <where>
             <if test="value !=null and value.length>0">
-                code = #{value} or name = #{value}
+                code like #{value} or name like #{value}
             </if>
         </where>
     </select>
