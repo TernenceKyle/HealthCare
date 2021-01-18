@@ -11,5 +11,6 @@ public interface CheckGroupMapper {
     public boolean update(CheckGroup Group);
     public boolean add(CheckGroup Group);
     public boolean addBind(@Param("p1")Integer gid,@Param("p2")Integer[] ids);
+    public int[] getBindItems(int gid);
     public boolean deleteBind(Integer id);
 }

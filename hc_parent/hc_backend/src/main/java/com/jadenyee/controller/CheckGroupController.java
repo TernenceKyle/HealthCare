@@ -7,8 +7,9 @@ import com.jadenyee.entity.Result;
 import com.jadenyee.pojo.CheckGroup;
 import com.jadenyee.service.CheckGroupService;
 import org.apache.dubbo.config.annotation.Reference;
-import org.apache.ibatis.annotations.Delete;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.Arrays;
 
 @RestController
 @RequestMapping("/checkgroup")
@@ -50,5 +51,20 @@ public class CheckGroupController {
             return new Result(false,MessageConstant.EDIT_CHECKGROUP_FAIL);
         }
         return  new Result(true,MessageConstant.EDIT_CHECKGROUP_SUCCESS);
+    }
+    @GetMapping("/get")
+    public CheckGroup getGroupById(Integer id){
+        try {
+            return service.findById(id);
+        }catch (Exception e)
+        {
+            e.printStackTrace();
+            return null;
+        }
+    }
+    @GetMapping("/getItems")
+    public int[] getItems(Integer gid){
+        int[] items = service.getItems(gid);
+        return items;
     }
 }

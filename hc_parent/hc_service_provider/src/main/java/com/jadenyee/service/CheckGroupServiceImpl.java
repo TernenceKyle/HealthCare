@@ -20,7 +20,6 @@ public class CheckGroupServiceImpl implements CheckGroupService{
         boolean add = mapper.add(group);
         boolean bind = mapper.addBind(group.getId(), ids);
         return (add&&bind);
-//        return (mapper.add(group) && mapper.addBind(group.getId(),ids));
     }
 
     @Override
@@ -32,6 +31,12 @@ public class CheckGroupServiceImpl implements CheckGroupService{
     public CheckGroup findById(int id) {
         return mapper.findById(id);
     }
+
+    @Override
+    public int[] getItems(int gid) {
+        return mapper.getBindItems(gid);
+    }
+
     /*
     CheckGroup 的分页查询
     * */
