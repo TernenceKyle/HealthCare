@@ -9,6 +9,7 @@ import com.jadenyee.pojo.CheckGroup;
 import org.apache.dubbo.config.annotation.Service;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import java.util.List;
 import java.util.Objects;
 
 @Service
@@ -17,20 +18,8 @@ public class CheckGroupServiceImpl implements CheckGroupService {
     private CheckGroupMapper mapper;
 
     @Override
-    public boolean addCheckGroup(CheckGroup group, Integer[] ids) {
-        boolean add = mapper.add(group);
-        boolean bind = false;
-        if (Objects.nonNull(ids)&&ids.length>0) {
-            bind = mapper.addBind(group.getId(), ids);
-        } else {
-            bind = true;
-        }
-        return (add && bind);
-    }
-
-    @Override
-    public boolean deleteCheckGroup(int id) throws Exception {
-        return (mapper.deleteBind(id)&&mapper.delete(id));
+    public List<CheckGroup> findAll() {
+        return mapper.findAll();
     }
 
     @Override
@@ -61,6 +50,17 @@ public class CheckGroupServiceImpl implements CheckGroupService {
     }
 
     @Override
+    public boolean addCheckGroup(CheckGroup group, Integer[] ids) {
+        boolean add = mapper.add(group);
+        boolean bind = false;
+        if (Objects.nonNull(ids)&&ids.length>0) {
+            bind = mapper.addBind(group.getId(), ids);
+        } else {
+            bind = true;
+        }
+        return (add && bind);
+    }
+    @Override
     public boolean updateCheckGroup(CheckGroup Group, Integer[] ids) {
         if (Objects.nonNull(ids)&&ids.length>0){
             mapper.deleteBind(Group.getId());
@@ -69,5 +69,9 @@ public class CheckGroupServiceImpl implements CheckGroupService {
             mapper.deleteBind(Group.getId());
             return mapper.update(Group);
         }
+    }
+    @Override
+    public boolean deleteCheckGroup(int id) throws Exception {
+        return (mapper.deleteBind(id)&&mapper.delete(id));
     }
 }

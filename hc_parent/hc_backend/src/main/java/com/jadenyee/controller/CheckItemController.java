@@ -7,7 +7,6 @@ import com.jadenyee.entity.Result;
 import com.jadenyee.pojo.CheckItem;
 import com.jadenyee.service.CheckItemService;
 import org.apache.dubbo.config.annotation.Reference;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Collections;
@@ -32,12 +31,6 @@ public class CheckItemController {
         }
         return new Result(true, MessageConstant.ADD_CHECKITEM_SUCCESS);
     }
-
-    @RequestMapping("/test")
-    public String testConn() {
-        return "OK!";
-    }
-
     /*
      * 删除 Controller
      * */
