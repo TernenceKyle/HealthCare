@@ -12,8 +12,8 @@ import org.springframework.web.bind.annotation.*;
 import java.util.Collections;
 import java.util.List;
 
-/*
- *  检查项管理
+/**
+ * 检查项 Controller
  */
 @RestController
 @RequestMapping("/checkitem")
@@ -21,6 +21,11 @@ public class CheckItemController {
     @Reference
     private CheckItemService service;
 
+    /**
+     * 新增检测项
+     * @param item 需要新增的检测项pojo
+     * @return 返回执行结果封装对象
+     */
     @PostMapping("/add")
     public Result addCheckItem(@RequestBody CheckItem item) {
         try {
@@ -31,9 +36,13 @@ public class CheckItemController {
         }
         return new Result(true, MessageConstant.ADD_CHECKITEM_SUCCESS);
     }
-    /*
-     * 删除 Controller
-     * */
+
+    /**
+     * 删除指定 id 的检测项
+     * @param item 需要删除的检测项
+     * @return 返回操作的执行结果
+     * @throws Exception
+     */
     @RequestMapping("/delete")
     public Result deleteCheckItem(@RequestBody CheckItem item) throws Exception {
         try {
@@ -44,6 +53,11 @@ public class CheckItemController {
         return new Result(true, MessageConstant.DELETE_CHECKITEM_SUCCESS);
     }
 
+    /**
+     * 检测项的分页查询
+     * @param bean 分页查询条件封装 bean
+     * @return 返回分页查询页面信息
+     */
     @PostMapping("/itemlist")
     public PageResult itemList(@RequestBody QueryPageBean bean) {
         List<CheckItem> byItem = null;
@@ -55,6 +69,11 @@ public class CheckItemController {
         }
     }
 
+    /**
+     * 获取指定id的检测项数据
+     * @param id 检测项id
+     * @return 返回检测箱信息
+     */
     @GetMapping("/get")
     public Result getItemDetail(Integer id) {
         CheckItem byId = null;
@@ -67,6 +86,12 @@ public class CheckItemController {
         }
         return new Result(true,"", byId);
     }
+
+    /**
+     * 更新检测项
+     * @param item 更改后的检测项
+     * @return 执行结果封装对象
+     */
     @PostMapping("/update")
     public Result updateCheckItem(@RequestBody CheckItem item){
         try{
@@ -77,6 +102,11 @@ public class CheckItemController {
         }
         return new Result(true,MessageConstant.EDIT_CHECKITEM_SUCCESS);
     }
+
+    /**
+     * 获取所有的检测项信息
+     * @return 返回信息结果
+     */
     @GetMapping("/items")
     public PageResult getAllItems(){
         return service.findAll();

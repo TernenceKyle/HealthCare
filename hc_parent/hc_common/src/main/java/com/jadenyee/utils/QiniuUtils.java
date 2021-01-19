@@ -27,7 +27,7 @@ public class QiniuUtils {
      * @param fileName 上传文件的文件名
      * @author JadenYee
      */
-    public static void uploadFile(String bucket,String filePath,String fileName){
+    public static boolean uploadFile(String bucket,String filePath,String fileName){
         UploadManager uploadManager = new UploadManager(conf);
         String uploadToken = auth.uploadToken(bucket);
         try {
@@ -35,6 +35,7 @@ public class QiniuUtils {
             DefaultPutRet ret = new Gson().fromJson(put.bodyString(),DefaultPutRet.class);
             System.out.println("上传的文件名:"+ret.key);
             System.out.println("文件Hash:"+ret.hash);
+            return true;
         } catch (QiniuException e) {
             Response resp = e.response;
             System.err.println(resp.toString());
@@ -42,6 +43,8 @@ public class QiniuUtils {
                 System.err.println(resp.bodyString());
             } catch (QiniuException qx) {
                 qx.printStackTrace();
+            }finally {
+                return false;
             }
         }
     }
@@ -52,7 +55,7 @@ public class QiniuUtils {
      * @param fileName 上传文件的文件名
      * @author JadenYee
     */
-    public static void uploadFile(String bucket,byte[] bytes,String fileName){
+    public static boolean uploadFile(String bucket,byte[] bytes,String fileName){
         UploadManager um = new UploadManager(conf);
         String uploadToken = auth.uploadToken(bucket);
         try{
@@ -60,6 +63,7 @@ public class QiniuUtils {
             DefaultPutRet ret = new Gson().fromJson(put.bodyString(), DefaultPutRet.class);
             System.out.println("上传的文件名:"+ret.key);
             System.out.println("文件Hash:"+ret.hash);
+            return true;
         } catch (QiniuException e) {
             Response response = e.response;
             System.out.println(response.toString());
@@ -67,6 +71,8 @@ public class QiniuUtils {
                 System.out.println(response.bodyString());
             } catch (QiniuException qiniuException) {
                 qiniuException.printStackTrace();
+            }finally {
+                return false;
             }
         }
     }
@@ -76,13 +82,15 @@ public class QiniuUtils {
      * @param fileName 删除文件名
      * @author JadenYee
      */
-    public static void deleteFile(String bucket,String fileName){
+    public static boolean deleteFile(String bucket,String fileName){
         BucketManager bm = new BucketManager(auth,conf);
         try {
             bm.delete(bucket,fileName);
+            return true;
         } catch (QiniuException e) {
             System.err.println("删除发生错误!错误代码: "+e.code());
             System.err.println(e.response.toString());
+            return false;
         }
     }
 }
