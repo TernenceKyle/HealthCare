@@ -13,6 +13,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
+
 @Service(interfaceClass = SetmealService.class)
 @Transactional
 public class SetmealServiceImpl implements SetmealService {
@@ -30,15 +31,17 @@ public class SetmealServiceImpl implements SetmealService {
         if (!Objects.nonNull(queryString)) {
             queryString = "";
         } else {
-            queryString = "%"+queryString.trim()+"%";
+            queryString = "%" + queryString.trim() + "%";
         }
         Page<Setmeal> res = mapper.findByCondition(queryString);
-        return new PageResult(res.getTotal(),res.getResult());
+        return new PageResult(res.getTotal(), res.getResult());
     }
 
     @Override
     public boolean deleteSetmeal(Integer id) {
-        return mapper.deleteCheckGroups(id)&&mapper.delete(id);
+        boolean delbind = mapper.deleteCheckGroups(id);
+        boolean delSetmeal = mapper.delete(id);
+        return delbind && delSetmeal;
     }
 
     @Override
@@ -48,19 +51,26 @@ public class SetmealServiceImpl implements SetmealService {
 
     @Override
     public boolean addSetmeal(Setmeal setmeal, Integer[] groupIds) {
-        boolean add = mapper.add(setmeal);
-        boolean b = mapper.addCheckGroups(setmeal.getId(), groupIds);
-        return add&&b;
+        boolean addS = false;
+        boolean addBind = false;
+        if (Objects.nonNull(groupIds) && groupIds.length > 0) {
+            addS = mapper.add(setmeal);
+            addBind = mapper.addCheckGroups(setmeal.getId(), groupIds);
+            return addS&addBind;
+        } else {
+            addS = mapper.add(setmeal);
+            return addS;
+        }
     }
 
     @Override
     public Setmeal getSetmealById(Integer id) {
-        return null;
+        return mapper.findById(id);
     }
 
     @Override
     public Integer[] getGroups(Integer sid) {
-        return new Integer[0];
+        return mapper.getCheckGroups(sid);
     }
 
     @Override

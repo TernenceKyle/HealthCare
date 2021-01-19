@@ -8,11 +8,13 @@ import com.jadenyee.entity.QueryPageBean;
 import com.jadenyee.pojo.CheckGroup;
 import org.apache.dubbo.config.annotation.Service;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Objects;
 
-@Service
+@Service(interfaceClass = CheckGroupService.class)
+@Transactional
 public class CheckGroupServiceImpl implements CheckGroupService {
     @Autowired
     private CheckGroupMapper mapper;

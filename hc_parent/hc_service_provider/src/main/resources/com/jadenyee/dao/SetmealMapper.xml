@@ -15,6 +15,9 @@
             id = #{id}
         </where>
     </select>
+    <select id="getCheckGroups" parameterType="integer" resultType="integer">
+        SELECT checkgroup_id FROM t_setmeal_checkgroup WHERE setmeal_id = #{sid}
+    </select>
     <select id="findByCondition" parameterType="string" resultType="com.jadenyee.pojo.Setmeal">
         <include refid="base" />
         <where>
@@ -32,11 +35,9 @@
     </insert>
     <insert id="addCheckGroups">
         INSERT INTO t_setmeal_checkgroup(setmeal_id,checkgroup_id) VALUES
-
             <foreach collection="cgIds" item="cgid" separator=",">
                 (#{sid},#{cgid})
             </foreach>
-
     </insert>
     <delete id="delete" parameterType="integer">
         DELETE FROM t_setmeal WHERE id = #{sid}

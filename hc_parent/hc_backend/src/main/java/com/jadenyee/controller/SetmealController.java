@@ -6,14 +6,35 @@ import com.jadenyee.entity.QueryPageBean;
 import com.jadenyee.entity.Result;
 import com.jadenyee.pojo.Setmeal;
 import com.jadenyee.service.SetmealService;
+import com.jadenyee.utils.QiniuUtils;
 import org.apache.dubbo.config.annotation.Reference;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.io.IOException;
+import java.util.UUID;
 
 @RestController
 @RequestMapping("/setmeal")
 public class SetmealController {
     @Reference
     private SetmealService service;
+
+
+    @PostMapping("/upload")
+    public Result uploadPic(@RequestParam("imgFile") MultipartFile file){
+        String filename = file.getOriginalFilename();
+        int index = filename.lastIndexOf('.');
+        String upFileName = UUID.randomUUID()+filename.substring(index-1);
+        try {
+            QiniuUtils.uploadFile("myhealthcare",file.getBytes(),upFileName);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new Result(false,MessageConstant.PIC_UPLOAD_FAIL);
+        }
+        return new Result(true,MessageConstant.PIC_UPLOAD_SUCCESS,upFileName);
+    }
+
 
     @PostMapping("/list")
     public PageResult getSetmealList(@RequestBody QueryPageBean bean) {
