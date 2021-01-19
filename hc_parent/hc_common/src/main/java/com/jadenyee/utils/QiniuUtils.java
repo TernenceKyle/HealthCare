@@ -10,6 +10,9 @@ import com.qiniu.storage.UploadManager;
 import com.qiniu.storage.model.DefaultPutRet;
 import com.qiniu.util.Auth;
 
+import java.sql.SQLOutput;
+import java.util.Set;
+
 public class QiniuUtils {
     private static Configuration conf;
     private static final String accessKey = "Ms7rCA1D80i7QsGusi75WQ2v0VIgB4sN71Z6hPAj";
@@ -89,6 +92,18 @@ public class QiniuUtils {
             return true;
         } catch (QiniuException e) {
             System.err.println("删除发生错误!错误代码: "+e.code());
+            System.err.println(e.response.toString());
+            return false;
+        }
+    }
+    public static boolean batchDelete(String bucket, String[] fileList){
+        BucketManager bm = new BucketManager(auth,conf);
+        BucketManager.Batch batch = new BucketManager.Batch();
+        try {
+            Response resp = bm.batch(batch.delete(bucket, fileList));
+            return true;
+        } catch (QiniuException e) {
+            System.err.println("批量删除发生错误!错误代码: "+e.code());
             System.err.println(e.response.toString());
             return false;
         }
