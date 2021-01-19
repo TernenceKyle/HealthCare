@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:dubbo="http://code.alibabatech.com/schema/dubbo"
+       xmlns:mvc="http://www.springframework.org/schema/mvc"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+							http://www.springframework.org/schema/beans/spring-beans.xsd
+							http://www.springframework.org/schema/mvc
+							http://www.springframework.org/schema/mvc/spring-mvc.xsd
+							http://code.alibabatech.com/schema/dubbo
+							http://code.alibabatech.com/schema/dubbo/dubbo.xsd
+							http://www.springframework.org/schema/context
+							http://www.springframework.org/schema/context/spring-context.xsd">
+    <context:annotation-config />
+    <!--注册定时任务-->
+    <bean id="clearImg" class="com.jadenyee.jobs.ClearImgJob" />
+    <!--注册定时任务jobdetail-->
+    <bean id="clearImgDetail" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+        <!--注入清理失效图片任务bean-->
+        <property name="targetObject" ref="clearImg"/>
+        <!--注入清理失效图片方法method-->
+        <property name="targetMethod" value="cleanImg"/>
+    </bean>
+    <!--注册定时任务触发器-->
+    <bean id="clearImgTrigger" class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
+        <!--绑定对应的 jobDetail-->
+        <property name="jobDetail" ref="clearImgDetail"/>
+        <!--设定Cron 任务执行周期-->
+        <property name="cronExpression">
+            <value>1/40 * * * * ?</value>
+        </property>
+    </bean>
+    <!--注册Scheduler 调度容器-->
+    <bean id="scheduler" class="org.springframework.scheduling.quartz.SchedulerFactoryBean">
+        <!--注入触发器列表-->
+        <property name="triggers">
+            <list>
+                <ref bean="clearImgTrigger"/>
+            </list>
+        </property>
+    </bean>
+</beans>

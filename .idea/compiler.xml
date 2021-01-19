@@ -11,6 +11,7 @@
         <module name="hc_service_provider" />
         <module name="hc_common" />
         <module name="hc_interface" />
+        <module name="health_jobs" />
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
@@ -20,6 +21,7 @@
       <module name="hc_mobile" target="1.8" />
       <module name="hc_parent" target="1.8" />
       <module name="hc_service_provider" target="1.8" />
+      <module name="health_jobs" target="1.8" />
     </bytecodeTargetLevel>
   </component>
 </project>
