@@ -20,10 +20,13 @@ public class QiniuUtils {
         //服务器的地域 zone2 为华南
         conf = new Configuration(Zone.zone2());
     }
-    /*
-    * 上传文件（通过文件路径）
-    * bucket 是存储空间名，fileName 是上传文件的名.
-    * */
+    /**
+     * 文件上传功能封装
+     * @param bucket 云存储空间名,
+     * @param filePath 上传文件的文件路径
+     * @param fileName 上传文件的文件名
+     * @author JadenYee
+     */
     public static void uploadFile(String bucket,String filePath,String fileName){
         UploadManager uploadManager = new UploadManager(conf);
         String uploadToken = auth.uploadToken(bucket);
@@ -42,13 +45,18 @@ public class QiniuUtils {
             }
         }
     }
-    /*
-    * 文件上传的二进制版本
-    * */
-    public static void uploadFile(byte[] bytes,String filePath, String fileName){
+    /**
+     * 文件上传的二进制版本
+     * @param bucket 云存储空间名,
+     * @param bytes 上传文件的二进制数据
+     * @param fileName 上传文件的文件名
+     * @author JadenYee
+    */
+    public static void uploadFile(String bucket,byte[] bytes,String fileName){
         UploadManager um = new UploadManager(conf);
+        String uploadToken = auth.uploadToken(bucket);
         try{
-            Response put = um.put(bytes, filePath, fileName);
+            Response put = um.put(bytes,fileName,uploadToken);
             DefaultPutRet ret = new Gson().fromJson(put.bodyString(), DefaultPutRet.class);
             System.out.println("上传的文件名:"+ret.key);
             System.out.println("文件Hash:"+ret.hash);
@@ -62,9 +70,12 @@ public class QiniuUtils {
             }
         }
     }
-    /*
-    * 删除文件，需要给定 bucket 和 文件名
-    * */
+    /**
+     * 云文件删除
+     * @param bucket 云存储空间名,
+     * @param fileName 删除文件名
+     * @author JadenYee
+     */
     public static void deleteFile(String bucket,String fileName){
         BucketManager bm = new BucketManager(auth,conf);
         try {

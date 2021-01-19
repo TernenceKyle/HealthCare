@@ -8,7 +8,7 @@ import java.util.List;
 
 public interface SetmealMapper {
     public List<Setmeal> findAll();
-    public Setmeal findById();
+    public Setmeal findById(Integer id);
     public Page<Setmeal> findByCondition(String queryString);
     public boolean add(Setmeal setmeal);
     public boolean addCheckGroups(@Param("sid") Integer sid,@Param("cgIds") Integer[] cgIds);

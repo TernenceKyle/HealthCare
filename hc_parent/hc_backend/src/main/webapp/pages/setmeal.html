@@ -252,7 +252,12 @@
             methods: {
                 //文件上传成功后的钩子，response为服务端返回的值，file为当前上传的文件封装成的js对象
                 handleAvatarSuccess(response, file) {
-
+                    this.imageUrl = "http://qn4f4bqbc.hn-bkt.clouddn.com/"+response.data;
+                    this.$message({
+                        message:response.message,
+                        type: response.flag?'success' : 'error'
+                    });
+                    this.formData.img = response.data;
                 },
 
                 //上传图片之前执行
@@ -310,9 +315,11 @@
                 },
                 // 重置表单
                 resetForm() {
+                    this.activeName = 'first';
                     this.formData = {};
                     this.checkgroupIds = [];
                     this.tableData = {};
+                    this.imageUrl = null;
                 },
                 // 弹出添加窗口
                 handleCreate() {
@@ -320,7 +327,6 @@
                     axios.get("/checkgroup/groups.do").then((res)=>{
                         this.tableData = res.data;
                     })
-                    this.activeName = 'first';
                     this.dialogFormVisible = true;
                 },
                 //删除套餐
@@ -340,7 +346,6 @@
                 },
                 //
                 handleUpdate(row){
-
                 },
                 //切换页码
                 handleCurrentChange(currentPage) {
