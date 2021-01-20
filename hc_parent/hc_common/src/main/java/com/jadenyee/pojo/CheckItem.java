@@ -90,7 +90,7 @@ public class CheckItem implements Serializable {
 
     @Override
     public String toString() {
-        return "CheckItem{" +
+        return "<<<CheckItem[" +
                 "id=" + id +
                 ", code='" + code + '\'' +
                 ", name='" + name + '\'' +
@@ -100,6 +100,6 @@ public class CheckItem implements Serializable {
                 ", type='" + type + '\'' +
                 ", remark='" + remark + '\'' +
                 ", attention='" + attention + '\'' +
-                '}';
+                "]>>>";
     }
 }

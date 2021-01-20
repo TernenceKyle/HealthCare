@@ -3,6 +3,21 @@
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.jadenyee.dao.CheckGroupMapper">
+    <resultMap id="checkgroup" type= "com.jadenyee.pojo.CheckGroup">
+        <id property="id" column="id" />
+        <result property="code" column="code" />
+        <result property="name" column="name" />
+        <result property="helpCode" column="helpCode" />
+        <result property="sex" column="sex" />
+        <result property="remark" column="remark" />
+        <result property="attention" column="attention" />
+        <collection property="checkItems"
+                    javaType="java.util.ArrayList"
+                    select="com.jadenyee.dao.CheckItemMapper.findById"
+                    column="id"
+                    ofType="com.jadenyee.pojo.CheckItem">
+        </collection>
+    </resultMap>
     <sql id="baseSql">
         SELECT id,code,name,helpCode,sex,remark,attention FROM t_checkgroup
     </sql>
@@ -17,9 +32,11 @@
             </if>
         </where>
     </select>
-    <select id="findById" parameterType="int" resultType="com.jadenyee.pojo.CheckGroup">
+    <select id="findById" parameterType="int" resultMap="checkgroup">
         <include refid="baseSql"/>
-            WHERE id = #{id}
+            <where>
+                id in (select checkgroup_id from t_setmeal_checkgroup where setmeal_id = #{id})
+            </where>
     </select>
     <insert id="add" parameterType="com.jadenyee.pojo.CheckGroup" >
         <selectKey resultType="java.lang.Integer" order="AFTER" keyProperty="id">
