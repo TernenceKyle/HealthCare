@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jadenyee.dao.OrderSettingMapper">
+    <sql id="base">
+        SELECT id,orderDate,number,reservations FROM t_ordersetting
+    </sql>
+    <select id="findAll" resultType="com.jadenyee.pojo.OrderSetting">
+        <include refid="base"/>
+    </select>
+    <select id="findById" parameterType="integer" resultType="com.jadenyee.pojo.OrderSetting">
+        <include refid="base" />
+        <where>
+            <if test="value !=null ">
+                id = #{id}
+            </if>
+        </where>
+    </select>
+    <select id="findByDate" parameterType="java.util.Date" resultType="com.jadenyee.pojo.OrderSetting">
+        <include refid="base"/>
+        <where>
+            orderDate = #{date}
+        </where>
+    </select>
+    <select id="findByRange" resultType="com.jadenyee.pojo.OrderSetting">
+        <include refid="base" />
+        <where>
+            orderDate BETWEEN #{start} AND #{end}
+        </where>
+    </select>
+    <delete id="delete" parameterType="integer">
+        DELETE FROM t_ordersetting WHERE id = #{id}
+    </delete>
+    <update id="update" parameterType="com.jadenyee.pojo.OrderSetting">
+        UPDATE t_ordersetting
+        <set>
+            <if test="number != null">
+                number = #{number},
+            </if>
+            <if test="reservations != null">
+                reservations = #{reservations},
+            </if>
+        </set>
+        WHERE id = #{id}
+    </update>
+    <insert id="add" parameterType="com.jadenyee.pojo.OrderSetting">
+        <selectKey keyProperty="id" order="AFTER" resultType="integer">
+            SELECT LAST_INSERT_ID()
+        </selectKey>
+        INSERT INTO t_ordersetting(orderDate,number,reservations) VALUE(#{orderDate},#{number},#{reservations})
+    </insert>
+    <insert id="batchAdd">
+        INSERT INTO t_ordersetting VALUES
+        <foreach collection="lists" item="item" separator=",">
+            (#{item.orderDate},#{item.number},#{item.reservations})
+        </foreach>
+    </insert>
+</mapper>

@@ -10,7 +10,6 @@ import java.util.Set;
 public class ClearImgJob {
     @Autowired
     private JedisPool jedisPool;
-
     /**
      * 进行定时清理相关的工作，删除无效的垃圾图片的任务。设置为每40秒执行一次，失效图片的批量删除。
      */
