@@ -3,13 +3,25 @@
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.jadenyee.dao.SetmealMapper">
+    <resultMap id="setmeal" type="com.jadenyee.pojo.Setmeal">
+        <id property="id" column="id" />
+        <result property="orderDate" column="orderDate" />
+        <result property="number" column="number" />
+        <result property="reservationa" column="reservations" />
+        <collection property="checkGroups"
+                    javaType="java.util.ArrayList"
+                    ofType="com.jadenyee.pojo.CheckGroup"
+                    column="id"
+                    select="com.jadenyee.dao.CheckGroupMapper.findById">
+        </collection>
+    </resultMap>
     <sql id="base">
         SELECT id,name,code,helpCode,sex,age,price,remark,attention,img FROM t_setmeal
     </sql>
     <select id="findAll" parameterType="integer" resultType="com.jadenyee.pojo.Setmeal">
         <include refid="base"/>
     </select>
-    <select id="findById" parameterType="integer" resultType="com.jadenyee.pojo.Setmeal">
+    <select id="findById" parameterType="integer" resultMap="setmeal">
         <include refid="base"/>
         <where>
             id = #{id}

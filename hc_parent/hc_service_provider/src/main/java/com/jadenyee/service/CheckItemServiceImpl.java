@@ -24,6 +24,12 @@ public class CheckItemServiceImpl  implements CheckItemService{
         return mapper.add(item);
     }
 
+    /**
+     * 删除指定检测项
+     * @param id 检测项 id
+     * @return 返回执行结果
+     * @throws Exception
+     */
     @Override
     public boolean deleteCheckItem(int id) throws Exception {
         //检查当前检测箱是否被检查组关联
@@ -36,11 +42,21 @@ public class CheckItemServiceImpl  implements CheckItemService{
         return mapper.delete(id);
     }
 
+    /**
+     * 查找指定 id 的检测项
+     * @param id 检测项 id
+     * @return 返回检测项信息
+     */
     @Override
     public CheckItem findById(int id) {
         return mapper.findById(id);
     }
 
+    /**
+     * 查询检测项
+     * @param bean 查询条件封装类
+     * @return 返回查询结果信息
+     */
     @Override
     public PageResult findByItem(QueryPageBean bean) {
         Integer currentPage = bean.getCurrentPage();
@@ -56,12 +72,21 @@ public class CheckItemServiceImpl  implements CheckItemService{
         return new PageResult(pageRes.getTotal(),pageRes.getResult());
     }
 
+    /**
+     * 更新检测项
+     * @param item 需要更新的检测项信息
+     * @return 返回操作执行结果
+     */
     @Override
     public boolean updateCheckItem(CheckItem item) {
 
         return mapper.update(item);
     }
 
+    /**
+     * 查询所有的检测项信息
+     * @return 返回查询结果
+     */
     @Override
     public PageResult findAll() {
         List<CheckItem> all = mapper.findAll();

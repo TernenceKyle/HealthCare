@@ -19,7 +19,7 @@
     </select>
     <select id="findById" parameterType="int" resultType="com.jadenyee.pojo.CheckItem">
         <include refid="baseSql"/>
-            WHERE id = #{id}
+            WHERE id in (SELECT checkitem_id FROM t_checkgroup_checkitem WHERE checkgroup_id = #{id})
     </select>
     <insert id="add" parameterType="com.jadenyee.pojo.CheckItem">
         INSERT INTO t_checkitem(code,name,sex,age,price,type,attention,remark) VALUE(#{code},#{name},#{sex},#{age},#{price},#{type},#{attention},#{remark})

@@ -51,6 +51,12 @@ public class CheckGroupServiceImpl implements CheckGroupService {
         return new PageResult(res.getTotal(), res.getResult());
     }
 
+    /**
+     * 新增检测组
+     * @param group
+     * @param ids 关联的检测项 id
+     * @return 返回操作执行结果
+     */
     @Override
     public boolean addCheckGroup(CheckGroup group, Integer[] ids) {
         boolean add = mapper.add(group);
@@ -62,6 +68,13 @@ public class CheckGroupServiceImpl implements CheckGroupService {
         }
         return (add && bind);
     }
+
+    /**
+     * 更新检测组
+     * @param Group 需要更新的检测组
+     * @param ids 关联的检测项 id
+     * @return 返回操作执行结果
+     */
     @Override
     public boolean updateCheckGroup(CheckGroup Group, Integer[] ids) {
         if (Objects.nonNull(ids)&&ids.length>0){
@@ -72,6 +85,13 @@ public class CheckGroupServiceImpl implements CheckGroupService {
             return mapper.update(Group);
         }
     }
+
+    /**
+     * 删除检测组
+     * @param id 需要删除的检测组 id
+     * @return 返回操作执行结果
+     * @throws Exception
+     */
     @Override
     public boolean deleteCheckGroup(int id) throws Exception {
         return (mapper.deleteBind(id)&&mapper.delete(id));
