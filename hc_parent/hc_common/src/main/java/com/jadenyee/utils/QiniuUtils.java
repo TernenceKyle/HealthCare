@@ -96,6 +96,13 @@ public class QiniuUtils {
             return false;
         }
     }
+
+    /**
+     * 七牛云批量删除
+     * @param bucket 云空间名称
+     * @param fileList 需要删除的文件列表名称
+     * @return 返回操作的执行结果值
+     */
     public static boolean batchDelete(String bucket, String[] fileList){
         BucketManager bm = new BucketManager(auth,conf);
         BucketManager.Batch batch = new BucketManager.Batch();
