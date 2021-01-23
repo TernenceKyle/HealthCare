@@ -8,7 +8,6 @@ import com.jadenyee.entity.QueryPageBean;
 import com.jadenyee.pojo.Setmeal;
 import freemarker.template.Configuration;
 import freemarker.template.Template;
-import freemarker.template.TemplateException;
 import org.apache.dubbo.config.annotation.Service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -16,7 +15,10 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.servlet.view.freemarker.FreeMarkerConfigurer;
 
 import java.io.*;
-import java.util.*;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
 
 @Service(interfaceClass = SetmealService.class)
 @Transactional
@@ -26,7 +28,7 @@ public class SetmealServiceImpl implements SetmealService {
     private SetmealMapper mapper;
     @Autowired
     private FreeMarkerConfigurer freeMarkerConfigurer;
-
+    //freemarker 生成的静态页面的路径
     @Value("${out_put_path}")
     private String outputPath;
 

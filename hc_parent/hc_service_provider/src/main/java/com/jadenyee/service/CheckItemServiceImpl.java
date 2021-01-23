@@ -68,7 +68,6 @@ public class CheckItemServiceImpl  implements CheckItemService{
         PageHelper.startPage(currentPage,pageSize);
         queryString = "%"+queryString.trim()+"%";
         Page<CheckItem> pageRes = mapper.findByCondition(queryString);
-        System.out.println(pageRes.getResult());
         return new PageResult(pageRes.getTotal(),pageRes.getResult());
     }
 

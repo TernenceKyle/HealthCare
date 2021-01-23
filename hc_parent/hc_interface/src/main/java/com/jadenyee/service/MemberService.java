@@ -1,6 +1,5 @@
 package com.jadenyee.service;
 
-import com.jadenyee.entity.Result;
 import com.jadenyee.pojo.Member;
 
 import java.util.List;

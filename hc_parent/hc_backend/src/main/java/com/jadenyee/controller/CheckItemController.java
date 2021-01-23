@@ -31,7 +31,7 @@ public class CheckItemController {
         try {
             service.addCheckItem(item);
         } catch (Exception e) {
-            System.err.println(e.getMessage());
+            e.printStackTrace();
             return new Result(false, MessageConstant.ADD_CHECKITEM_FAIL);
         }
         return new Result(true, MessageConstant.ADD_CHECKITEM_SUCCESS);

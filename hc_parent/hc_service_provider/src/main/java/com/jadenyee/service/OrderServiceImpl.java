@@ -15,7 +15,12 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Map;
+import java.util.Objects;
 
+/**
+ * Order 预约申请
+ * @author JadenYee
+ */
 @Service
 @Transactional
 public class OrderServiceImpl implements OrderService {
@@ -61,7 +66,6 @@ public class OrderServiceImpl implements OrderService {
             submit.setRegTime(new Date());
             //会员注册成功后，进行新增套餐预约操作
             if (memberService.submit(submit)) {
-                System.out.println(submit);
                 newOrder = new Order(submit.getId(), date, Order.ORDERTYPE_WEIXIN, Order.ORDERSTATUS_NO, setmealID);
                 if (orderMapper.add(newOrder)){
                     orderSetting.setReservations(orderSetting.getReservations()+1);
@@ -105,9 +109,12 @@ public class OrderServiceImpl implements OrderService {
     @Override
     public Map<String, String> getOrderDetail(Integer id) {
         Map orderDetail = orderMapper.getOrderDetail(id);
-        // 将查询出的orderDate 日期数据格式化为字符串。
-        SimpleDateFormat format = new SimpleDateFormat("yyyy 年 MM 月 dd 日");
-        orderDetail.put("orderDate",format.format(orderDetail.get("orderDate")));
+        //避免空指针异常
+        if (Objects.nonNull(orderDetail)) {
+            // 将查询出的orderDate 日期数据格式化为字符串。
+            SimpleDateFormat format = new SimpleDateFormat("yyyy 年 MM 月 dd 日");
+            orderDetail.put("orderDate", format.format(orderDetail.get("orderDate")));
+        }
         return orderDetail;
     }
 }

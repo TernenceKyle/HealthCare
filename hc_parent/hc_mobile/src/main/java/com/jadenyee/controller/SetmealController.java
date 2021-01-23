@@ -2,24 +2,27 @@ package com.jadenyee.controller;
 
 import com.jadenyee.constant.MessageConstant;
 import com.jadenyee.constant.RedisMessageConstant;
-import com.jadenyee.entity.PageResult;
 import com.jadenyee.entity.Result;
 import com.jadenyee.pojo.Order;
 import com.jadenyee.pojo.Setmeal;
 import com.jadenyee.service.OrderService;
 import com.jadenyee.service.SetmealService;
-import com.sun.corba.se.impl.protocol.giopmsgheaders.Message;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.dubbo.config.annotation.Reference;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 import redis.clients.jedis.JedisPool;
 
 import java.text.ParseException;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 
+/**
+ * 移动端 套餐相关 Controller
+ */
 @RestController
 @RequestMapping("/setmeal")
 public class SetmealController {
@@ -32,7 +35,6 @@ public class SetmealController {
 
     /**
      * 移动端 访问套餐列表的信息
-     *
      * @return
      */
     @PostMapping("/getSetmeal")
