@@ -106,4 +106,21 @@ public class Member implements Serializable{
     public void setRemark(String remark) {
         this.remark = remark;
     }
+
+    @Override
+    public String toString() {
+        return "Member{" +
+                "id=" + id +
+                ", fileNumber='" + fileNumber + '\'' +
+                ", name='" + name + '\'' +
+                ", sex='" + sex + '\'' +
+                ", idCard='" + idCard + '\'' +
+                ", phoneNumber='" + phoneNumber + '\'' +
+                ", regTime=" + regTime +
+                ", password='" + password + '\'' +
+                ", email='" + email + '\'' +
+                ", birthday=" + birthday +
+                ", remark='" + remark + '\'' +
+                '}';
+    }
 }

@@ -33,7 +33,7 @@
             <div class="contentBox">
                 <div class="card">
                     <div class="">
-                        <img :src="'http://pqjroc654.bkt.clouddn.com/'+setmeal.img" width="100%" height="100%" />
+                        <img :src="'http://qn4f4bqbc.hn-bkt.clouddn.com/'+setmeal.img" width="100%" height="100%" />
                     </div>
                     <div class="project-text">
                         <h4 class="tit">{{setmeal.name}}</h4>
@@ -113,12 +113,52 @@
                 methods:{
                     //发送验证码
                     sendValidateCode(){
+                        var telephone = this.orderInfo.telephone;
+                        if (!checkTelephone(telephone)){
+                            this.$message({
+                                message:"手机号填写有误!",
+                                type:"warning"
+                            });
+                        }else{
+                            axios.get("/validateCode/sendCode.do?telephone="+telephone).then(()=>{
+                                if (res.data.flag){
+                                    this.$message({
+                                        message:res.data.message,
+                                        type:'success'
+                                    });
+                                }else {
+                                    this.$message.error(res.data.message);
+                                }
+                            });
+                            validateCodeButton = $("#validateCodeButton")[0];
+                            clock = window.setInterval(doLoop,1000);
+                        }
                     },
                     //提交预约
                     submitOrder(){
+                        alert(JSON.stringify(this.orderInfo));
+                        var idCard = this.orderInfo.idCard;
+                        if (!checkIdCard(idCard)){
+                            this.$message({
+                                message: "身份证信息填写有误!",
+                                type:"warning"
+                            })
+                            return;
+                        }
+                        axios.post("/setmeal/order.do",this.orderInfo).then((res)=>{
+                            if (res.data.flag){
+                                window.location.href = "orderSuccess.html?orderId="+res.data.data;
+                            }else {
+                                this.$message.error(res.data.message);
+                            }
+                        });
+
                     }
                 },
                 mounted(){
+                    axios.post("/setmeal/findById.do?id="+id).then((res)=>{
+                        this.setmeal = res.data.data;
+                    });
                 }
             });
         </script>

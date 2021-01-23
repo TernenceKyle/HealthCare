@@ -10,4 +10,5 @@ public interface OrderSettingService {
     public void importOrderSettings(List<OrderSetting> lists);
     public List<OrderSetting> getOrdersettings(Date start,Date end);
     public boolean setOrder(OrderSetting orderSetting);
+    public OrderSetting getOrderSettingByDate(Date date);
 }

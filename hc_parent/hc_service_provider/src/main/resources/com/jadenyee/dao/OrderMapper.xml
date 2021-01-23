@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jadenyee.dao.OrderMapper">
+    <resultMap id="orderMap" type="com.jadenyee.pojo.Order">
+        <id property="id" column="id"/>
+        <result property="memberId" column="member_id"/>
+        <result property="orderDate" column="orderDate"/>
+        <result property="orderType" column="orderType"/>
+        <result property="orderStatus" column="orderStatus"/>
+        <result property="setmealId" column="setmeal_id"/>
+    </resultMap>
+    <sql id="base">
+        SELECT id, member_id, orderDate, orderType, orderStatus, setmeal_id
+        FROM t_order
+    </sql>
+    <select id="findAll" resultMap="orderMap">
+        <include refid="base"/>
+    </select>
+    <select id="findById" parameterType="integer" resultMap="orderMap">
+        <include refid="base"/>
+        <where>
+            id = #{id}
+        </where>
+    </select>
+    <select id="findByMemberAndDate" resultMap="orderMap">
+        <include refid="base"/>
+        <where>
+            member_id = #{mid} AND orderDate = #{date}
+        </where>
+    </select>
+    <insert id="add" parameterType="com.jadenyee.pojo.Order">
+        <selectKey order="AFTER" keyProperty="id" resultType="integer">
+            SELECT LAST_INSERT_ID()
+        </selectKey>
+        INSERT INTO t_order(member_id, orderDate, orderType, orderStatus, setmeal_id)
+        VALUE (#{memberId},#{orderDate},#{orderType},#{orderStatus},#{setmealId})
+    </insert>
+    <update id="update" parameterType="com.jadenyee.pojo.Order">
+        UPDATE t_order
+        <set>
+            <if test="member_id != null">
+                member_id = #{member_id}
+            </if>
+            <if test="orderDate != null">
+                orderDate = #{orderDate}
+            </if>
+            <if test="orderType != null ">
+                orderType = #{orderType}
+            </if>
+            <if test="orderStatus != null">
+                orderStatus = #{orderStatus}
+            </if>
+            <if test="setmeal_id != null ">
+                setmeal_id = #{setmeal_id}
+            </if>
+            WHERE id = #{id}
+        </set>
+    </update>
+    <delete id="delete" parameterType="integer">
+        DELETE
+        FROM t_order
+        WHERE id = #{id}
+    </delete>
+    <select id="getOrderDetail" resultType="map" parameterType="integer">
+        SELECT
+            m.name as member,s.name as setmeal,o.orderDate as orderDate,o.orderType as orderType
+        FROM
+             t_order as o,
+             t_member as m,
+             t_setmeal as s
+        WHERE
+            o.member_id = m.id AND o.setmeal_id = s.id AND o.id = #{id}
+    </select>
+</mapper>

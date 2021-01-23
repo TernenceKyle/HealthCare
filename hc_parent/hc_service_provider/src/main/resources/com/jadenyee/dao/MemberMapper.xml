@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jadenyee.dao.MemberMapper">
+    <sql id="base">
+        SELECT id,
+               fileNumber,
+               name,
+               sex,
+               idCard,
+               phoneNumber,
+               regTime,
+               password,
+               email,
+               birthday,
+               remark
+        FROM t_member
+    </sql>
+    <select id="findAll" resultType="com.jadenyee.pojo.Member">
+        <include refid="base"/>
+    </select>
+    <select id="findById" parameterType="integer" resultType="com.jadenyee.pojo.Member">
+        <include refid="base"/>
+        <where>
+            id = #{id}
+        </where>
+    </select>
+    <select id="findByTel" parameterType="string" resultType="com.jadenyee.pojo.Member">
+        <include refid="base"/>
+        <where>
+            phoneNumber = #{tel}
+        </where>
+    </select>
+    <insert id="add" parameterType="com.jadenyee.pojo.Member">
+        <selectKey keyProperty="id" order="AFTER" resultType="integer">
+         SELECT LAST_INSERT_ID()
+        </selectKey>
+        INSERT INTO t_member(fileNumber,name,sex,idCard,phoneNumber,regTime,password,email,birthday,remark)
+        VALUE(#{fileNumber},#{name},#{sex},#{idCard},#{phoneNumber},#{regTime},#{password},#{email},#{birthday},#{remark})
+    </insert>
+    <delete id="delete" parameterType="integer">
+        DELETE
+        FROM t_member
+        WHERE id = #{id}
+    </delete>
+    <update id="update" parameterType="com.jadenyee.pojo.Member">
+        UPDATE t_member
+        <set>
+            <if test="fileNumber != null ">
+                fileNumber = #{fileNumber},
+            </if>
+            <if test="name != null ">
+                name = #{name},
+            </if>
+            <if test="sex != null ">
+                sex = #{sex},
+            </if>
+            <if test="idCard != null ">
+                idCard = #{idCard},
+            </if>
+            <if test="phoneNumber != null ">
+                phoneNumber = #{phoneNumber},
+            </if>
+            <if test="regTime != null ">
+                regTime = #{regTime},
+            </if>
+            <if test="password != null">
+                password = #{password}
+            </if>
+            <if test="email != null">
+                email = #{email}
+            </if>
+            <if test="birthday != null">
+                birthday = #{birthday}
+            </if>
+            <if test="remark != null">
+                remark = #{remark}
+            </if>
+        </set>
+        WHERE id = #{id}
+    </update>
+</mapper>

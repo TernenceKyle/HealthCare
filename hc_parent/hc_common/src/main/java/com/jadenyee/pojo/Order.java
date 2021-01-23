@@ -89,4 +89,16 @@ public class Order implements Serializable{
     public void setSetmealId(Integer setmealId) {
         this.setmealId = setmealId;
     }
+
+    @Override
+    public String toString() {
+        return "Order{" +
+                "id=" + id +
+                ", memberId=" + memberId +
+                ", orderDate=" + orderDate +
+                ", orderType='" + orderType + '\'' +
+                ", orderStatus='" + orderStatus + '\'' +
+                ", setmealId=" + setmealId +
+                '}';
+    }
 }

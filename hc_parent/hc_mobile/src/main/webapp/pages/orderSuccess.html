@@ -15,7 +15,7 @@
         <script src="../plugins/vue/vue.js"></script>
         <script src="../plugins/vue/axios-0.18.0.js"></script>
         <script>
-            var id = getUrlParam("orderId");
+            var id = getUrlParam("orderId");//获取预约ID
         </script>
     </head>
     <body data-spy="scroll" data-target="#myNavbar" data-offset="150">
@@ -66,8 +66,13 @@
                 orderInfo:{}
             },
             mounted(){
-                axios.post("/order/findById.do?id=" + id).then((response) => {
-                    this.orderInfo = response.data.data;
+                //发送ajax请求，根据预约ID查询预约相关信息，用于页面展示
+                axios.post("/order/detail.do?id=" + id).then((response) => {
+                    if(response.data.flag){
+                        this.orderInfo = response.data.data;
+                    }else{
+                        this.$message.error(response.data.message);
+                    }
                 });
             }
         });
