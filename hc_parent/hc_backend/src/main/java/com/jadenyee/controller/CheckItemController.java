@@ -7,6 +7,7 @@ import com.jadenyee.entity.Result;
 import com.jadenyee.pojo.CheckItem;
 import com.jadenyee.service.CheckItemService;
 import org.apache.dubbo.config.annotation.Reference;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Collections;
@@ -27,6 +28,7 @@ public class CheckItemController {
      * @return 返回执行结果封装对象
      */
     @PostMapping("/add")
+    @PreAuthorize("hasAuthority('CHECKITEM_ADD')")
     public Result addCheckItem(@RequestBody CheckItem item) {
         try {
             service.addCheckItem(item);
@@ -43,7 +45,9 @@ public class CheckItemController {
      * @return 返回操作的执行结果
      * @throws Exception
      */
+
     @RequestMapping("/delete")
+    @PreAuthorize("hasAuthority('CHECKITEM_DELETE')")
     public Result deleteCheckItem(@RequestBody CheckItem item) throws Exception {
         try {
             service.deleteCheckItem(item.getId());
@@ -59,6 +63,7 @@ public class CheckItemController {
      * @return 返回分页查询页面信息
      */
     @PostMapping("/itemlist")
+    @PreAuthorize("hasAuthority('CHECKITEM_QUERY')")
     public PageResult itemList(@RequestBody QueryPageBean bean) {
         List<CheckItem> byItem = null;
         try {
@@ -75,6 +80,7 @@ public class CheckItemController {
      * @return 返回检测箱信息
      */
     @GetMapping("/get")
+    @PreAuthorize("hasAuthority('CHECKITEM_QUERY')")
     public Result getItemDetail(Integer id) {
         CheckItem byId = null;
         try {
@@ -92,6 +98,7 @@ public class CheckItemController {
      * @param item 更改后的检测项
      * @return 执行结果封装对象
      */
+    @PreAuthorize("hasAuthority('CHECKITEM_UPDATE')")
     @PostMapping("/update")
     public Result updateCheckItem(@RequestBody CheckItem item){
         try{
@@ -107,6 +114,7 @@ public class CheckItemController {
      * 获取所有的检测项信息
      * @return 返回信息结果
      */
+    @PreAuthorize("hasAuthority('CHECKITEM_QUERY')")
     @GetMapping("/items")
     public PageResult getAllItems(){
         return service.findAll();

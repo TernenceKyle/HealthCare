@@ -10,6 +10,7 @@ import java.util.List;
 public interface CheckItemMapper {
     public List<CheckItem> findAll();
     public CheckItem findById(int id);
+    public CheckItem findByIdMulti(Integer id);
     public boolean add(CheckItem item);
     public Page<CheckItem> findByCondition(String queryString);
     public boolean delete(Integer id);

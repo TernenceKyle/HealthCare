@@ -15,6 +15,9 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.servlet.view.freemarker.FreeMarkerConfigurer;
 
 import java.io.*;
+import java.net.URL;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -63,7 +66,11 @@ public class SetmealServiceImpl implements SetmealService {
     public boolean deleteSetmeal(Integer id) {
         boolean delbind = mapper.deleteCheckGroups(id);
         boolean delSetmeal = mapper.delete(id);
-        this.generateMobileStaticHtml();
+        try {
+            generateWhenDel(id);
+        }catch (Exception e){
+            e.printStackTrace();
+        }
         return delbind && delSetmeal;
     }
 
@@ -91,14 +98,13 @@ public class SetmealServiceImpl implements SetmealService {
         if (Objects.nonNull(groupIds) && groupIds.length > 0) {
             addS = mapper.add(setmeal);
             addBind = mapper.addCheckGroups(setmeal.getId(), groupIds);
-            this.generateMobileStaticHtml();
+            //每次新增套餐信息就去生成最新的静态页面
+            generateWhenAdd(setmeal.getId());
             return addS&addBind;
         } else {
             addS = mapper.add(setmeal);
             return addS;
         }
-        //每次新增套餐信息就去生成最新的静态页面
-
     }
 
     /**
@@ -141,7 +147,6 @@ public class SetmealServiceImpl implements SetmealService {
         //生成套餐详情静态页面（多个）
         generateMobileSetmealDetailHtml(all);
     }
-
     /**
      * 生成预约套餐列表静态页面
      * @param all 预约套餐列表信息
@@ -183,4 +188,29 @@ public class SetmealServiceImpl implements SetmealService {
             e.printStackTrace();
         }
     }
+    /**
+     * 当添加新的套餐时，重新生成套餐页表静态页面，和新增套餐对应的静态页面
+     * @param sid 套餐 id
+     * @date  2021/1/26
+     */
+    public void generateWhenAdd(Integer sid){
+        List<Setmeal> all = this.getAll();
+        generateMobileSetmealDetailHtml(all);
+        for (Setmeal setmeal : all) {
+            if (sid == setmeal.getId()){
+                Map<String, Object> dataMap = new HashMap<String, Object>();
+                dataMap.put("setmeal",this.mapper.findById(setmeal.getId()));
+                this.generateHtml("mobile_setmeal_detail.ftl","setmeal_detail_"+setmeal.getId()+".html",dataMap);
+            }
+        }
+    }
+
+    /**
+     * 当某个套餐被删除时，重新生成套餐列表页面，并删除对应的套餐内容静态页面
+     * @param sid 删除的套餐 id
+     */
+    public void generateWhenDel(Integer sid) throws IOException {
+        this.generateMobileSetmealDetailHtml(this.getAll());
+    }
+
 }

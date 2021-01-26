@@ -9,6 +9,7 @@ import java.util.List;
 public interface CheckGroupMapper {
     public List<CheckGroup> findAll();
     public CheckGroup findById(int id);
+    public CheckGroup findByIdMulti(Integer id);
     public Page<CheckGroup> findByCondition(String queryString);
     public int[] getBindItems(int gid);
     public boolean delete(Integer id);
