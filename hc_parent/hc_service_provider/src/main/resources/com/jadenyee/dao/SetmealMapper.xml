@@ -12,7 +12,7 @@
                     javaType="java.util.ArrayList"
                     ofType="com.jadenyee.pojo.CheckGroup"
                     column="id"
-                    select="com.jadenyee.dao.CheckGroupMapper.findById">
+                    select="com.jadenyee.dao.CheckGroupMapper.findByIdMulti">
         </collection>
     </resultMap>
     <sql id="base">

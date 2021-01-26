@@ -7,6 +7,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+
+/**
+ * 会员 Service
+ */
 @Service
 @Transactional
 public class MemberServiceImpl implements MemberService {

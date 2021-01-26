@@ -13,7 +13,7 @@
         <result property="attention" column="attention" />
         <collection property="checkItems"
                     javaType="java.util.ArrayList"
-                    select="com.jadenyee.dao.CheckItemMapper.findById"
+                    select="com.jadenyee.dao.CheckItemMapper.findByIdMulti"
                     column="id"
                     ofType="com.jadenyee.pojo.CheckItem">
         </collection>
@@ -32,11 +32,17 @@
             </if>
         </where>
     </select>
-    <select id="findById" parameterType="int" resultMap="checkgroup">
+    <select id="findByIdMulti" parameterType="int" resultMap="checkgroup">
         <include refid="baseSql"/>
             <where>
                 id in (select checkgroup_id from t_setmeal_checkgroup where setmeal_id = #{id})
             </where>
+    </select>
+    <select id="findById" parameterType="integer" resultType="com.jadenyee.pojo.CheckGroup">
+        <include refid="baseSql"/>
+        <where>
+            id  = #{id}
+        </where>
     </select>
     <insert id="add" parameterType="com.jadenyee.pojo.CheckGroup" >
         <selectKey resultType="java.lang.Integer" order="AFTER" keyProperty="id">

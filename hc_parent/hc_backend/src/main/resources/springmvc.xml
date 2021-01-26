@@ -2,7 +2,8 @@
 <beans xmlns="http://www.springframework.org/schema/beans"
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xmlns:context="http://www.springframework.org/schema/context"
-       xmlns:mvc="http://www.springframework.org/schema/mvc" xmlns:dubbo="http://dubbo.apache.org/schema/dubbo"
+       xmlns:mvc="http://www.springframework.org/schema/mvc"
+       xmlns:dubbo="http://dubbo.apache.org/schema/dubbo"
        xsi:schemaLocation="http://www.springframework.org/schema/beans
 						http://www.springframework.org/schema/beans/spring-beans.xsd
 						http://www.springframework.org/schema/mvc
@@ -24,7 +25,7 @@
             </bean>
         </mvc:message-converters>
     </mvc:annotation-driven>
-    <context:component-scan base-package="com.jadenyee.controller"/>
+    <context:component-scan base-package="com.jadenyee"/>
     <!-- 指定应用名称 -->
     <dubbo:application name="hc_backend" >
         <dubbo:parameter key="qos.port" value="33333" />
@@ -32,7 +33,7 @@
     <!--指定服务注册中心地址-->
     <dubbo:registry address="zookeeper://192.168.23.199:2181"/>
     <!--批量扫描-->
-    <dubbo:annotation package="com.jadenyee.controller" />
+    <dubbo:annotation package="com.jadenyee" />
     <!--
         超时全局设置 10分钟
         check=false 不检查服务提供方，开发阶段建议设置为false
@@ -63,5 +64,5 @@
         <constructor-arg name="port" value="6379" type="int" />
         <constructor-arg name="timeout" value="30000" type="int" />
     </bean>
-
+    <import resource="spring-security.xml" />
 </beans>
