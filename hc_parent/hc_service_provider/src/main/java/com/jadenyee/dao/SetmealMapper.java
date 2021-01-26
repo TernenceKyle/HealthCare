@@ -5,6 +5,7 @@ import com.jadenyee.pojo.Setmeal;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
+import java.util.Map;
 
 public interface SetmealMapper {
     public List<Setmeal> findAll();
@@ -16,4 +17,5 @@ public interface SetmealMapper {
     public boolean deleteCheckGroups(Integer sid);
     public boolean update(Setmeal setmeal);
     public Integer[] getCheckGroups(Integer sid);
+    public List<Map<String,Object>> getSetmealStatisticByOrder();
 }

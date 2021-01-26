@@ -6,6 +6,7 @@ import com.jadenyee.dao.SetmealMapper;
 import com.jadenyee.entity.PageResult;
 import com.jadenyee.entity.QueryPageBean;
 import com.jadenyee.pojo.Setmeal;
+import com.sun.org.apache.regexp.internal.RE;
 import freemarker.template.Configuration;
 import freemarker.template.Template;
 import org.apache.dubbo.config.annotation.Service;
@@ -18,10 +19,7 @@ import java.io.*;
 import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
 
 @Service(interfaceClass = SetmealService.class)
 @Transactional
@@ -134,6 +132,22 @@ public class SetmealServiceImpl implements SetmealService {
     @Override
     public List<Setmeal> getAll() {
         return mapper.findAll();
+    }
+
+    @Override
+    public Map<String,List> getSetmealStatistics() {
+        List<Map<String,Object>> res = mapper.getSetmealStatisticByOrder();
+        List<String> nameList = new ArrayList<>();
+        List<Map<String,Object>> valueList = new ArrayList<>();
+        Map<String,List> result = new HashMap<>();
+        String key = null;
+        for (Map<String,Object> re : res) {
+           nameList.add((String) re.get("name"));
+           valueList.add(re);
+        }
+        result.put("setmealNames",nameList);
+        result.put("setmealCount",valueList);
+        return result;
     }
 
     /**

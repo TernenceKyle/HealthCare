@@ -18,4 +18,6 @@ public interface OrderMapper {
 //    public Page<Order> findByCondition(String queryString);
     public Order findByMemberAndDate(@Param("mid") Integer mid,@Param("date") Date date);
     public Map getOrderDetail(Integer id);
+//    public Integer countOrderByDate(String date);
+//    public Integer countOrderByWeek(String week);
 }

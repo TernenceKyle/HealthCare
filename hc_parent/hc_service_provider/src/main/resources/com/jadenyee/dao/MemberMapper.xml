@@ -80,4 +80,17 @@
         </set>
         WHERE id = #{id}
     </update>
+    <!--会员统计相关-->
+    <select id="getMemberCountBefore" resultType="integer" parameterType="string" >
+        SELECT COUNT(id) FROM t_member WHERE regTime &lt; #{date}
+    </select>
+    <select id="getMemberCountAfter" resultType="integer" parameterType="string" >
+        SELECT COUNT(id) FROM t_member WHERE regTime &gt; #{date}
+    </select>
+    <select id="getMemberIncrByDate" resultType="integer" parameterType="string" >
+        SELECT COUNT(id) FROM t_member WHERE regTime = #{date}
+    </select>
+    <select id="getTotalMemberCount" resultType="integer" parameterType="string" >
+        SELECT COUNT(id) FROM t_member
+    </select>
 </mapper>

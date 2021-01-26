@@ -38,6 +38,13 @@
             </if>
         </where>
     </select>
+    <select id="getSetmealStatisticByOrder" resultType="Map">
+        SELECT t1.name as name,t2.oNumber as value
+        FROM t_setmeal as t1
+        RIGHT JOIN
+        (SELECT setmeal_id,COUNT(id) as oNumber FROM t_order GROUP BY setmeal_id) as t2
+        ON t2.setmeal_id = t1.id
+    </select>
     <insert id="add" parameterType="com.jadenyee.pojo.Setmeal">
         <selectKey order="AFTER" resultType="integer" keyColumn="id" keyProperty="id">
             SELECT LAST_INSERT_ID()
