@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jadenyee.dao.PermissionMapper">
+    <sql id="base">
+        SELECT id,name,keyword,description FROM t_permission
+    </sql>
+    <select id="findAll" resultType="com.jadenyee.pojo.Permission">
+        <include refid="base"></include>
+    </select>
+    <select id="findById" resultType="com.jadenyee.pojo.Permission" parameterType="integer">
+        <include refid="base"></include>
+        WHERE id = #{id}
+    </select>
+    <select id="findByRoleId" parameterType="integer" resultType="com.jadenyee.pojo.Permission">
+        <include refid="base"></include>
+        WHERE id IN (SELECT permission_id FROM t_role_permission WHERE role_id = #{id})
+    </select>
+    <insert id="add" parameterType="com.jadenyee.pojo.Permission">
+        INSERT INTO t_permission (name,keyword,description)
+        VALUE(#{name},#{keyword},#{description})
+    </insert>
+    <delete id="delete" parameterType="integer">
+        DELETE FROM t_permission WHERE id = #{id}
+    </delete>
+    <update id="update" parameterType="com.jadenyee.pojo.Permission">
+        UPDATE t_permission
+        <set>
+            <if test="name != null">
+                name = #{name},
+            </if>
+            <if test="keyword != null">
+                keyword = #{keyword},
+            </if>
+            <if test="description != null">
+                description = #{description},
+            </if>
+            WHERE id = #{id}
+        </set>
+    </update>
+</mapper>
