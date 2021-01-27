@@ -5,6 +5,11 @@ import com.jadenyee.entity.Result;
 import com.jadenyee.service.MemberService;
 import com.jadenyee.service.OrderService;
 import com.jadenyee.service.SetmealService;
+import net.sf.jasperreports.engine.JasperCompileManager;
+import net.sf.jasperreports.engine.JasperExportManager;
+import net.sf.jasperreports.engine.JasperFillManager;
+import net.sf.jasperreports.engine.JasperPrint;
+import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource;
 import org.apache.dubbo.config.annotation.Reference;
 import org.apache.poi.ss.usermodel.HorizontalAlignment;
 import org.apache.poi.xssf.usermodel.*;
@@ -73,16 +78,8 @@ public class ReportController {
     @GetMapping("/getBusinessReportData")
     public Result getDailyReport() {
         try {
-            LocalDate date = LocalDate.now();
-            Map<String, Object> dailyStatistic = new HashMap<>();
-            List<Map<String, Object>> setmealStat = setmealService.getHotSetmealStat();
-            Map<String, Integer> orderStat = orderService.getOrderStat();
-            Map<String, Integer> memberStatisDaily = memberService.getMemberStatisDaily();
-            dailyStatistic.put("hotSetmeal", setmealStat);
-            dailyStatistic.putAll(orderStat);
-            dailyStatistic.putAll(memberStatisDaily);
-            dailyStatistic.put("reportDate", date.toString());
-            return new Result(true, MessageConstant.GET_BUSINESS_REPORT_SUCCESS, dailyStatistic);
+            Map<String, Object> businessStat = this.getBusinessStat();
+            return new Result(true, MessageConstant.GET_BUSINESS_REPORT_SUCCESS, businessStat);
         } catch (Exception e) {
             e.printStackTrace();
             return new Result(false, MessageConstant.GET_BUSINESS_REPORT_FAIL);
@@ -98,7 +95,6 @@ public class ReportController {
     @RequestMapping("/exportBusinessReport")
     public Result exportBusinessReport(HttpServletRequest request, HttpServletResponse response) {
         try {
-
             String reportDate = LocalDate.now().toString();
             List<Map<String, Object>> setmealStat = setmealService.getHotSetmealStat();
             Map<String, Integer> orderStat = orderService.getOrderStat();
@@ -149,7 +145,7 @@ public class ReportController {
                     row.getCell(4).setCellValue(name);
                     row.getCell(5).setCellValue(setmeal_count);
                     row.getCell(6).setCellValue(proportion.doubleValue());
-                }else{
+                } else {
                     row = sheet.createRow(rowNum);
                     row.setRowStyle(rowStyle);
                     XSSFCell c1 = row.createCell(4);
@@ -178,5 +174,55 @@ public class ReportController {
             e.printStackTrace();
             return new Result(false, MessageConstant.GET_BUSINESS_REPORT_FAIL, null);
         }
+    }
+
+    /**
+     * 将经营数据以 PDF 方式导出
+     *
+     * @param request  request 请求
+     * @param response response 响应
+     * @return 返回一个结果封装
+     */
+    @RequestMapping("/exportBusinessReportPDF")
+    public Result exportBusinessReportPDF(HttpServletRequest request, HttpServletResponse response) {
+        try {
+            Map<String, Object> businessStat = this.getBusinessStat();
+            //取出返回结果数据，准备将报表数据写入到PDF文件中
+            List<Map<String, Object>> hotSetmeal = (List<Map<String, Object>>) businessStat.get("hotSetmeal");
+            //动态获取模板文件绝对磁盘路径
+            String jrxmlPath = request.getSession().getServletContext().getRealPath("template") + File.separator + "health_business3.jrxml";
+            String jasperPath = request.getSession().getServletContext().getRealPath("template") + File.separator + "health_business3.jasper";
+            //编译模板
+            JasperCompileManager.compileReportToFile(jrxmlPath, jasperPath);
+
+            //填充数据---使用JavaBean数据源方式填充
+            JasperPrint jasperPrint = JasperFillManager.fillReport(jasperPath, businessStat, new JRBeanCollectionDataSource(hotSetmeal));
+            ServletOutputStream out = response.getOutputStream();
+            response.setContentType("application/pdf");
+            response.setHeader("content-Disposition", "attachment;filename=report.pdf");
+            //输出文件
+            JasperExportManager.exportReportToPdfStream(jasperPrint, out);
+            return null;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new Result(false, MessageConstant.GET_BUSINESS_REPORT_FAIL);
+        }
+    }
+    /**
+     * 将会员，预约，套餐占比数据进行封装
+     *
+     * @return 封装数据
+     */
+    private Map<String, Object> getBusinessStat() {
+        LocalDate date = LocalDate.now();
+        Map<String, Object> businessStatistic = new HashMap<>();
+        List<Map<String, Object>> setmealStat = setmealService.getHotSetmealStat();
+        Map<String, Integer> orderStat = orderService.getOrderStat();
+        Map<String, Integer> memberStatisDaily = memberService.getMemberStatisDaily();
+        businessStatistic.put("hotSetmeal", setmealStat);
+        businessStatistic.putAll(orderStat);
+        businessStatistic.putAll(memberStatisDaily);
+        businessStatistic.put("reportDate", date.toString());
+        return businessStatistic;
     }
 }

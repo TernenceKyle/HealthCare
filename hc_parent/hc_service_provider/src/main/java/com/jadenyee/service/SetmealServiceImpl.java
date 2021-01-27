@@ -50,6 +50,7 @@ public class SetmealServiceImpl implements SetmealService {
             queryString = "%" + queryString.trim() + "%";
         }
         Page<Setmeal> res = mapper.findByCondition(queryString);
+        this.generateMobileStaticHtml();
         return new PageResult(res.getTotal(), res.getResult());
     }
 
@@ -165,6 +166,7 @@ public class SetmealServiceImpl implements SetmealService {
      * 根据 ftl 模板生成静态的 html 文件
      */
     public void generateMobileStaticHtml(){
+        System.out.println("套餐静态文件生成...");
         /*获取所有的套餐信息用于生成静态页面*/
         List<Setmeal> all = this.getAll();
         //生成套餐列表的静态页面
@@ -195,7 +197,6 @@ public class SetmealServiceImpl implements SetmealService {
             this.generateHtml("mobile_setmeal_detail.ftl","setmeal_detail_"+setmeal.getId()+".html",dataMap);
         }
     }
-
     /**
      * 负责生成静态 html 页面
      * @param templateName ftl模板名字
