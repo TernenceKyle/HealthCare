@@ -136,7 +136,6 @@
                     },
                     //提交预约
                     submitOrder(){
-                        alert(JSON.stringify(this.orderInfo));
                         var idCard = this.orderInfo.idCard;
                         if (!checkIdCard(idCard)){
                             this.$message({

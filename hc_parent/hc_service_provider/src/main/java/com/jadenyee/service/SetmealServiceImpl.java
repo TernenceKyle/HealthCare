@@ -50,7 +50,6 @@ public class SetmealServiceImpl implements SetmealService {
             queryString = "%" + queryString.trim() + "%";
         }
         Page<Setmeal> res = mapper.findByCondition(queryString);
-        this.generateMobileStaticHtml();
         return new PageResult(res.getTotal(), res.getResult());
     }
 
@@ -79,7 +78,11 @@ public class SetmealServiceImpl implements SetmealService {
      */
     @Override
     public boolean updateSetmeal(Setmeal setmeal, Integer[] groupIds) {
-        return false;
+        boolean deleteBind = mapper.deleteCheckGroups(setmeal.getId());
+        boolean addBind = mapper.addCheckGroups(setmeal.getId(), groupIds);
+        boolean update = mapper.update(setmeal);
+        generateWhenChange(setmeal.getId());
+        return deleteBind&&addBind&&update;
     }
 
     /**
@@ -95,8 +98,7 @@ public class SetmealServiceImpl implements SetmealService {
         if (Objects.nonNull(groupIds) && groupIds.length > 0) {
             addS = mapper.add(setmeal);
             addBind = mapper.addCheckGroups(setmeal.getId(), groupIds);
-            //每次新增套餐信息就去生成最新的静态页面
-            generateWhenAdd(setmeal.getId());
+            generateWhenChange(setmeal.getId());
             return addS&addBind;
         } else {
             addS = mapper.add(setmeal);
@@ -112,6 +114,16 @@ public class SetmealServiceImpl implements SetmealService {
     @Override
     public Setmeal getSetmealById(Integer id) {
         return mapper.findById(id);
+    }
+
+    /**
+     * 根据id 仅获取 Setmeal 相关的数据
+     * @param id 给定的 id
+     * @return 返回对应的 setmeal 套餐内容
+     */
+    @Override
+    public Setmeal getSetmeal4Edit(Integer id) {
+        return mapper.getById(id);
     }
 
     /**
@@ -219,7 +231,7 @@ public class SetmealServiceImpl implements SetmealService {
      * @param sid 套餐 id
      * @date  2021/1/26
      */
-    public void generateWhenAdd(Integer sid){
+    public void generateWhenChange(Integer sid){
         List<Setmeal> all = this.getAll();
         generateMobileSetmealDetailHtml(all);
         for (Setmeal setmeal : all) {
