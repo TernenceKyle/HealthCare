@@ -18,6 +18,8 @@ public interface OrderMapper {
 //    public Page<Order> findByCondition(String queryString);
     public Order findByMemberAndDate(@Param("mid") Integer mid,@Param("date") Date date);
     public Map getOrderDetail(Integer id);
-//    public Integer countOrderByDate(String date);
-//    public Integer countOrderByWeek(String week);
+    public Integer countByDate(String date);
+    public Integer countByPeriod(@Param("start") String start,@Param("end") String end);
+    public Integer countFinishedByDate(String date);
+    public Integer countFinishedByPeriod(@Param("start") String start,@Param("end") String end);
 }

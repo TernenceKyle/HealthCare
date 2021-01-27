@@ -24,7 +24,6 @@ import java.util.*;
 @Service(interfaceClass = SetmealService.class)
 @Transactional
 public class SetmealServiceImpl implements SetmealService {
-
     @Autowired
     private SetmealMapper mapper;
     @Autowired
@@ -32,7 +31,6 @@ public class SetmealServiceImpl implements SetmealService {
     //freemarker 生成的静态页面的路径
     @Value("${out_put_path}")
     private String outputPath;
-
     /**
      * 套餐业务
      * @param bean 查询条件封装类
@@ -134,6 +132,10 @@ public class SetmealServiceImpl implements SetmealService {
         return mapper.findAll();
     }
 
+    /**
+     * 套餐预约信息的数据统计
+     * @return 返回消息封装
+     */
     @Override
     public Map<String,List> getSetmealStatistics() {
         List<Map<String,Object>> res = mapper.getSetmealStatisticByOrder();
@@ -148,6 +150,15 @@ public class SetmealServiceImpl implements SetmealService {
         result.put("setmealNames",nameList);
         result.put("setmealCount",valueList);
         return result;
+    }
+
+    /**
+     * 获取热点套餐的统计数据
+     * @return 返回结果封装
+     */
+    @Override
+    public List<Map<String, Object>> getHotSetmealStat() {
+        return mapper.getHotSetmealStat();
     }
 
     /**
@@ -211,7 +222,7 @@ public class SetmealServiceImpl implements SetmealService {
         List<Setmeal> all = this.getAll();
         generateMobileSetmealDetailHtml(all);
         for (Setmeal setmeal : all) {
-            if (sid == setmeal.getId()){
+            if (Objects.equals(sid,setmeal.getId())){
                 Map<String, Object> dataMap = new HashMap<String, Object>();
                 dataMap.put("setmeal",this.mapper.findById(setmeal.getId()));
                 this.generateHtml("mobile_setmeal_detail.ftl","setmeal_detail_"+setmeal.getId()+".html",dataMap);

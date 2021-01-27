@@ -11,4 +11,5 @@ public interface OrderService {
     Result orderSetmeal(String plateform, Map orderInfo) throws ParseException;
     Order findOrder(Integer id);
     Map<String,String> getOrderDetail(Integer id);
+    Map<String,Integer> getOrderStat();
 }

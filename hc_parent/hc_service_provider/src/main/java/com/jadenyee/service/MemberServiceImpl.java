@@ -6,9 +6,9 @@ import org.apache.dubbo.config.annotation.Service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.time.temporal.ChronoField;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -72,6 +72,27 @@ public class MemberServiceImpl implements MemberService {
         Map<String,List> resMap = new HashMap<>();
         resMap.put("months",mothList);
         resMap.put("memberCount", countList);
+        return resMap;
+    }
+
+    /**
+     * 获取会员每日数据
+     * @return 返回一个封装的结果集合
+     */
+    @Override
+    public Map<String, Integer> getMemberStatisDaily() {
+        LocalDate date = LocalDate.now();
+        Map<String,Integer> resMap = new HashMap<>(4);
+        LocalDate startOfThisWeek  = date.minusDays(date.get(ChronoField.DAY_OF_WEEK)-1);
+        LocalDate startOfThisMonth = date.minusDays(date.getDayOfMonth()-1);
+        Integer newMemberToday = mapper.getMemberIncrByDate(date.toString());
+        Integer newMemberToWeek = mapper.countByPeriod(startOfThisWeek.toString(), date.toString());
+        Integer newMemberToMonth = mapper.countByPeriod(startOfThisMonth.toString(), date.toString());
+        Integer total = mapper.getTotalMemberCount();
+        resMap.put("todayNewMember",newMemberToday);
+        resMap.put("thisWeekNewMember",newMemberToWeek);
+        resMap.put("thisMonthNewMember",newMemberToMonth);
+        resMap.put("totalMember",total);
         return resMap;
     }
 }

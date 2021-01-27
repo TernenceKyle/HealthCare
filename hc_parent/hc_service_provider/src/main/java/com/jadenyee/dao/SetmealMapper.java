@@ -18,4 +18,5 @@ public interface SetmealMapper {
     public boolean update(Setmeal setmeal);
     public Integer[] getCheckGroups(Integer sid);
     public List<Map<String,Object>> getSetmealStatisticByOrder();
+    public List<Map<String,Object>> getHotSetmealStat();
 }

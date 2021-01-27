@@ -84,13 +84,13 @@
     <select id="getMemberCountBefore" resultType="integer" parameterType="string" >
         SELECT COUNT(id) FROM t_member WHERE regTime &lt; #{date}
     </select>
-    <select id="getMemberCountAfter" resultType="integer" parameterType="string" >
-        SELECT COUNT(id) FROM t_member WHERE regTime &gt; #{date}
+    <select id="countByPeriod" resultType="integer">
+        SELECT COUNT(id) FROM t_member WHERE regTime BETWEEN #{start } AND  #{end}
     </select>
     <select id="getMemberIncrByDate" resultType="integer" parameterType="string" >
         SELECT COUNT(id) FROM t_member WHERE regTime = #{date}
     </select>
-    <select id="getTotalMemberCount" resultType="integer" parameterType="string" >
+    <select id="getTotalMemberCount" resultType="integer">
         SELECT COUNT(id) FROM t_member
     </select>
 </mapper>

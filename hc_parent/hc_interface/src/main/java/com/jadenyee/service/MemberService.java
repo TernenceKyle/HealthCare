@@ -13,4 +13,5 @@ public interface MemberService {
     boolean editMember(Member member);
     List<Member> getAllMembers();
     Map<String,List> getMemberStatistics4PastYear();
+    Map<String,Integer> getMemberStatisDaily();
 }

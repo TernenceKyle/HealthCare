@@ -13,7 +13,11 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.Month;
+import java.time.temporal.ChronoField;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 
@@ -116,5 +120,34 @@ public class OrderServiceImpl implements OrderService {
             orderDetail.put("orderDate", format.format(orderDetail.get("orderDate")));
         }
         return orderDetail;
+    }
+
+    /**
+     * 获取当前时间为准的一月、一周、一天内的预约统计数据
+     * @return 返回结果封装集
+     */
+    @Override
+    public Map<String, Integer> getOrderStat() {
+        LocalDate date = LocalDate.now();
+        //本周周一日期
+        int nowOfWeek = date.get(ChronoField.DAY_OF_WEEK);
+        LocalDate startOfWeek = date.minusDays( nowOfWeek - 1);
+        //本月第一天
+        int dayOfMonth = date.get(ChronoField.DAY_OF_MONTH);
+        LocalDate startOfMonth = date.minusDays(dayOfMonth - 1);
+        Integer orderToday = orderMapper.countByDate(date.toString());
+        Integer orderToWeek = orderMapper.countByPeriod(startOfWeek.toString(), date.toString());
+        Integer orderToMonth = orderMapper.countByPeriod(startOfMonth.toString(), date.toString());
+        Integer orderFinishedToday = orderMapper.countFinishedByDate(date.toString());
+        Integer orderFinishedToWeek = orderMapper.countFinishedByPeriod(startOfWeek.toString(), date.toString());
+        Integer orderFinishedToMonth = orderMapper.countFinishedByPeriod(startOfMonth.toString(),date.toString());
+        Map<String,Integer> resMap = new HashMap<>();
+        resMap.put("todayOrderNumber",orderToday);
+        resMap.put("thisWeekOrderNumber",orderToWeek);
+        resMap.put("thisMonthOrderNumber", orderToMonth);
+        resMap.put("todayVisitsNumber", orderFinishedToday);
+        resMap.put("thisWeekVisitsNumber", orderFinishedToWeek);
+        resMap.put("thisMonthVisitsNumber", orderFinishedToMonth);
+        return resMap;
     }
 }

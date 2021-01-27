@@ -17,4 +17,5 @@ public interface SetmealService {
     public Integer[] getGroups(Integer sid);
     public List<Setmeal> getAll();
     public Map<String,List> getSetmealStatistics();
+    public List<Map<String,Object>> getHotSetmealStat();
 }

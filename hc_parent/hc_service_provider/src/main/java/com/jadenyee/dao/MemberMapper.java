@@ -2,8 +2,8 @@ package com.jadenyee.dao;
 
 import com.github.pagehelper.Page;
 import com.jadenyee.pojo.Member;
+import org.apache.ibatis.annotations.Param;
 
-import java.util.Date;
 import java.util.List;
 
 public interface MemberMapper {
@@ -15,7 +15,7 @@ public interface MemberMapper {
     public Page<Member> findByCondition(String queryString);
     public Member findByTel(String tel);
     public Integer getMemberCountBefore(String date);
-    public Integer getMemberCountAfter(String date);
+    public Integer countByPeriod(@Param("start") String start,@Param("end") String end);
     public Integer getMemberIncrByDate(String date);
-    public Integer getTotalMemberCount(String date);
+    public Integer getTotalMemberCount();
 }
