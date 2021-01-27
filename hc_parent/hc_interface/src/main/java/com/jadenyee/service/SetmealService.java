@@ -6,6 +6,7 @@ import com.jadenyee.pojo.CheckGroup;
 import com.jadenyee.pojo.Setmeal;
 
 import java.util.List;
+import java.util.Map;
 
 public interface SetmealService {
     public PageResult getSetmealList(QueryPageBean bean);
@@ -15,5 +16,6 @@ public interface SetmealService {
     public Setmeal getSetmealById(Integer id);
     public Integer[] getGroups(Integer sid);
     public List<Setmeal> getAll();
-
+    public Map<String,List> getSetmealStatistics();
+    public List<Map<String,Object>> getHotSetmealStat();
 }

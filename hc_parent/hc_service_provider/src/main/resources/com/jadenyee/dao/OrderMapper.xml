@@ -64,13 +64,36 @@
         WHERE id = #{id}
     </delete>
     <select id="getOrderDetail" resultType="map" parameterType="integer">
-        SELECT
-            m.name as member,s.name as setmeal,o.orderDate as orderDate,o.orderType as orderType
-        FROM
-             t_order as o,
+        SELECT m.name      as member,
+               s.name      as setmeal,
+               o.orderDate as orderDate,
+               o.orderType as orderType
+        FROM t_order as o,
              t_member as m,
              t_setmeal as s
-        WHERE
-            o.member_id = m.id AND o.setmeal_id = s.id AND o.id = #{id}
+        WHERE o.member_id = m.id
+          AND o.setmeal_id = s.id
+          AND o.id = #{id}
+    </select>
+    <select id="countByDate" resultType="integer" parameterType="string">
+        SELECT COUNT(id)
+        FROM t_order
+        WHERE orderDate = #{value}
+    </select>
+    <select id="countFinishedByDate" resultType="integer" parameterType="string">
+        SELECT COUNT(id)
+        FROM t_order
+        WHERE orderDate = #{value}
+          AND orderStatus = '到诊'
+    </select>
+    <select id="countByPeriod" resultType="integer">
+        SELECT COUNT(id)
+        FROM t_order
+        WHERE orderDate BETWEEN #{start} AND #{end}
+    </select>
+    <select id="countFinishedByPeriod" resultType="integer">
+        SELECT COUNT(id)
+        FROM t_order
+        WHERE orderStatus = '到诊' AND orderDate BETWEEN #{start} AND #{end}
     </select>
 </mapper>

@@ -4,10 +4,10 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.jadenyee.dao.SetmealMapper">
     <resultMap id="setmeal" type="com.jadenyee.pojo.Setmeal">
-        <id property="id" column="id" />
-        <result property="orderDate" column="orderDate" />
-        <result property="number" column="number" />
-        <result property="reservationa" column="reservations" />
+        <id property="id" column="id"/>
+        <result property="orderDate" column="orderDate"/>
+        <result property="number" column="number"/>
+        <result property="reservationa" column="reservations"/>
         <collection property="checkGroups"
                     javaType="java.util.ArrayList"
                     ofType="com.jadenyee.pojo.CheckGroup"
@@ -16,7 +16,17 @@
         </collection>
     </resultMap>
     <sql id="base">
-        SELECT id,name,code,helpCode,sex,age,price,remark,attention,img FROM t_setmeal
+        SELECT id,
+               name,
+               code,
+               helpCode,
+               sex,
+               age,
+               price,
+               remark,
+               attention,
+               img
+        FROM t_setmeal
     </sql>
     <select id="findAll" parameterType="integer" resultType="com.jadenyee.pojo.Setmeal">
         <include refid="base"/>
@@ -28,15 +38,24 @@
         </where>
     </select>
     <select id="getCheckGroups" parameterType="integer" resultType="integer">
-        SELECT checkgroup_id FROM t_setmeal_checkgroup WHERE setmeal_id = #{sid}
+        SELECT checkgroup_id
+        FROM t_setmeal_checkgroup
+        WHERE setmeal_id = #{sid}
     </select>
     <select id="findByCondition" parameterType="string" resultType="com.jadenyee.pojo.Setmeal">
-        <include refid="base" />
+        <include refid="base"/>
         <where>
             <if test="value !=null and value.length>0">
                 name LIKE #{value} OR code LIKE #{value} OR helpCode LIKE #{value}
             </if>
         </where>
+    </select>
+    <select id="getSetmealStatisticByOrder" resultType="Map">
+        SELECT t1.name as name, t2.oNumber as value
+        FROM t_setmeal as t1
+            RIGHT JOIN
+            (SELECT setmeal_id, COUNT(id) as oNumber FROM t_order GROUP BY setmeal_id) as t2
+        ON t2.setmeal_id = t1.id
     </select>
     <insert id="add" parameterType="com.jadenyee.pojo.Setmeal">
         <selectKey order="AFTER" resultType="integer" keyColumn="id" keyProperty="id">
@@ -47,14 +66,31 @@
     </insert>
     <insert id="addCheckGroups">
         INSERT INTO t_setmeal_checkgroup(setmeal_id,checkgroup_id) VALUES
-            <foreach collection="cgIds" item="cgid" separator=",">
-                (#{sid},#{cgid})
-            </foreach>
+        <foreach collection="cgIds" item="cgid" separator=",">
+            (#{sid},#{cgid})
+        </foreach>
     </insert>
     <delete id="delete" parameterType="integer">
-        DELETE FROM t_setmeal WHERE id = #{sid}
+        DELETE
+        FROM t_setmeal
+        WHERE id = #{sid}
     </delete>
     <delete id="deleteCheckGroups" parameterType="integer">
-        DELETE FROM t_setmeal_checkgroup WHERE setmeal_id = #{sid}
+        DELETE
+        FROM t_setmeal_checkgroup
+        WHERE setmeal_id = #{sid}
     </delete>
+    <!--    <select id="getHotSetmealStat" resultType="Map">-->
+    <!--        SELECT t1.name as name, t2.cnt as value-->
+    <!--        FROM t_setmeal t1-->
+    <!--            INNER JOIN (SELECT setmeal_id, COUNT(id) as cnt-->
+    <!--            FROM t_order-->
+    <!--            GROUP BY setmeal_id-->
+    <!--            ORDER BY cnt DESC LIMIT 0,2) t2 ON t1.id = t2.setmeal_id;-->
+    <!--    </select>-->
+    <select id="getHotSetmealStat" resultType="Map">
+        SELECT t3.name,t3.value as setmeal_count,(t3.value / t4.total) as proportion FROM (SELECT t1.name as name,t2.cnt as value FROM t_setmeal t1
+        INNER JOIN (SELECT setmeal_id,COUNT(id) as cnt FROM t_order GROUP BY setmeal_id) t2
+        ON t1.id = t2.setmeal_id) as t3,(SELECT COUNT(setmeal_id) as total FROM t_order) as t4 ORDER BY t3.value DESC;
+    </select>
 </mapper>
