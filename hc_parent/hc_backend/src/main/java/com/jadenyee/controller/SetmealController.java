@@ -95,6 +95,28 @@ public class SetmealController {
     }
 
     /**
+     * 更新修改后的套餐内容数据
+     *
+     * @param setmeal 更新的套餐
+     * @param cgIds   与套餐相关联的
+     * @return 返回操作结果
+     */
+    @PostMapping("/update")
+    public Result updateSetmeal(@RequestBody Setmeal setmeal, Integer[] cgIds) {
+        boolean res;
+        try {
+            res = service.updateSetmeal(setmeal, cgIds);
+            if (res) {
+                jedisPool.getResource().sadd(RedisConstant.SETMEAL_PIC_DB_RESOURCES, setmeal.getImg());
+            }
+            return new Result(true, "修改套餐内容成功！");
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new Result(false, MessageConstant.ADD_SETMEAL_FAIL);
+        }
+    }
+
+    /**
      * 删除方法
      *
      * @param id 传入删除 setmeal 的id
@@ -109,5 +131,33 @@ public class SetmealController {
             return new Result(false, "删除套餐数据失败!");
         }
         return new Result(res, "删除套餐数据成功!");
+    }
+
+    /**
+     * 获取套餐信息（用于修改）
+     *
+     * @param id 套餐 id
+     * @return 套餐内容信息
+     */
+    @GetMapping("/get")
+    public Result getSetmealById(Integer id) {
+        try {
+            Setmeal setmeal4Edit = service.getSetmeal4Edit(id);
+            return new Result(true, MessageConstant.QUERY_SETMEAL_SUCCESS, setmeal4Edit);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new Result(false, MessageConstant.QUERY_SETMEAL_FAIL);
+        }
+    }
+
+    /**
+     * 获取该套餐包含的检测组
+     *
+     * @param id 给定的套餐 id
+     * @return 返回检测组id 数组
+     */
+    @GetMapping("/getCheckGroups")
+    public Integer[] getCheckGroups(Integer id) {
+        return service.getGroups(id);
     }
 }
