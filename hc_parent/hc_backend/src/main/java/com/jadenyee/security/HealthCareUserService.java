@@ -38,8 +38,6 @@ public class HealthCareUserService implements UserDetailsService {
         if (loginUser == null) {
             return null;
         }
-        System.out.println(encoder.encode("admin"));
-        System.out.println(encoder.encode("1234"));
         String password = loginUser.getPassword();
         List<GrantedAuthority> authenticationList = new ArrayList<>();
         Set<Role> roles = loginUser.getRoles();

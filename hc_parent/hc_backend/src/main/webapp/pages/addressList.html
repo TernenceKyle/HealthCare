@@ -8,18 +8,28 @@
     <meta name="description" content="传智健康">
     <meta name="keywords" content="传智健康">
     <meta content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no" name="viewport">
+    <link rel="stylesheet" href="https://cache.amap.com/lbs/static/main1119.css"/>
     <!-- 引入样式 -->
     <link rel="stylesheet" href="../plugins/elementui/index.css">
     <link rel="stylesheet" href="../plugins/font-awesome/css/font-awesome.min.css">
     <link rel="stylesheet" href="../css/style.css">
 </head>
+<style>
+    #mapcontainer {
+        width: 750px;
+        height: 350px;
+    }
+    .amap-sug-result {
+        z-index: 9999;
+    }
+</style>
 <body class="hold-transition">
 <div id="app">
     <div class="content-header">
-        <h1>预约管理<small>检查项管理</small></h1>
+        <h1>地址管理<small>地址列表</small></h1>
         <el-breadcrumb separator-class="el-icon-arrow-right" class="breadcrumb">
             <el-breadcrumb-item :to="{ path: '/' }">首页</el-breadcrumb-item>
-            <el-breadcrumb-item>预约管理</el-breadcrumb-item>
+            <el-breadcrumb-item>地址管理</el-breadcrumb-item>
             <el-breadcrumb-item>检查项管理</el-breadcrumb-item>
         </el-breadcrumb>
     </div>
@@ -33,18 +43,16 @@
             </div>
             <el-table size="small" current-row-key="id" :data="dataList" stripe highlight-current-row>
                 <el-table-column type="index" align="center" label="序号"></el-table-column>
-                <el-table-column prop="code" label="项目编码" align="center"></el-table-column>
-                <el-table-column prop="name" label="项目名称" align="center"></el-table-column>
-                <el-table-column label="适用性别" align="center">
+                <el-table-column prop="location" label="公司地点" align="center"></el-table-column>
+                <el-table-column prop="longitude" label="经度" align="center"></el-table-column>
+                <el-table-column prop="latitude" label="纬度" align="center"></el-table-column>
+                <el-table-column label="是否有效" align="center">
                     <template slot-scope="scope">
-                        <span>{{ scope.row.sex == '0' ? '不限' : scope.row.sex == '1' ? '男' : '女'}}</span>
+                        <span>{{ scope.row.valid == '0' ? '无效' : scope.row.valid == '1' ? '有效' : '在审核'}}</span>
                     </template>
                 </el-table-column>
-                <el-table-column prop="age" label="适用年龄" align="center"></el-table-column>
-                <el-table-column prop="remark" label="项目说明" align="center"></el-table-column>
                 <el-table-column label="操作" align="center">
                     <template slot-scope="scope">
-                        <el-button type="primary" size="mini" @click="handleUpdate(scope.row)">编辑</el-button>
                         <el-button size="mini" type="danger" @click="handleDelete(scope.row)">删除</el-button>
                     </template>
                 </el-table-column>
@@ -61,141 +69,24 @@
             </div>
             <!-- 新增标签弹层 -->
             <div class="add-form">
-                <el-dialog title="新增检查项" :visible.sync="dialogFormVisible">
-                    <el-form ref="dataAddForm" :model="formData" :rules="rules" label-position="right"
-                             label-width="100px">
-                        <el-row>
-                            <el-col :span="12">
-                                <el-form-item label="项目编码" prop="code">
-                                    <el-input v-model="formData.code"/>
-                                </el-form-item>
-                            </el-col>
-                            <el-col :span="12">
-                                <el-form-item label="项目名称" prop="name">
-                                    <el-input v-model="formData.name"/>
-                                </el-form-item>
-                            </el-col>
-                        </el-row>
-                        <el-row>
-                            <el-col :span="12">
-                                <el-form-item label="性别">
-                                    <el-select v-model="formData.sex">
-                                        <el-option label="不限" value="0"></el-option>
-                                        <el-option label="男" value="1"></el-option>
-                                        <el-option label="女" value="2"></el-option>
-                                    </el-select>
-                                </el-form-item>
-                            </el-col>
-                            <el-col :span="12">
-                                <el-form-item label="适用年龄">
-                                    <el-input v-model="formData.age"/>
-                                </el-form-item>
-                            </el-col>
-                        </el-row>
-                        <el-row>
-                            <el-col :span="12">
-                                <el-form-item label="类型">
-                                    <el-select v-model="formData.type">
-                                        <el-option label="检查" value="1"></el-option>
-                                        <el-option label="检验" value="2"></el-option>
-                                    </el-select>
-                                </el-form-item>
-                            </el-col>
-                            <el-col :span="12">
-                                <el-form-item label="价格">
-                                    <el-input v-model="formData.price"/>
-                                </el-form-item>
-                            </el-col>
-                        </el-row>
-                        <el-row>
-                            <el-col :span="24">
-                                <el-form-item label="项目说明">
-                                    <el-input v-model="formData.remark" type="textarea"></el-input>
-                                </el-form-item>
-                            </el-col>
-                        </el-row>
-                        <el-row>
-                            <el-col :span="24">
-                                <el-form-item label="注意事项">
-                                    <el-input v-model="formData.attention" type="textarea"></el-input>
-                                </el-form-item>
-                            </el-col>
-                        </el-row>
-                    </el-form>
-                    <div slot="footer" class="dialog-footer">
-                        <el-button @click="dialogFormVisible = false">取消</el-button>
-                        <el-button type="primary" @click="handleAdd()">确定</el-button>
+                <el-dialog title="新增地址" :visible.sync="dialogFormVisible" @open="initMap()">
+                    <!--                    <div style="width: 600px;height: 400px">-->
+                    <div id="mapcontainer"></div>
+                    <div id="myPageTop">
+                        <table>
+                            <tr>
+                                <td>
+                                    <label>请输入关键字：</label>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <input id="tipinput" name="location"/>
+                                </td>
+                            </tr>
+                        </table>
                     </div>
-                </el-dialog>
-            </div>
-
-            <!-- 编辑标签弹层 -->
-            <div class="add-form">
-                <el-dialog title="编辑检查项" :visible.sync="dialogFormVisible4Edit">
-                    <el-form ref="dataEditForm" :model="formData" :rules="rules" label-position="right"
-                             label-width="100px">
-                        <el-row>
-                            <el-col :span="12">
-                                <el-form-item label="项目编码" prop="code">
-                                    <el-input v-model="formData.code"/>
-                                </el-form-item>
-                            </el-col>
-                            <el-col :span="12">
-                                <el-form-item label="项目名称" prop="name">
-                                    <el-input v-model="formData.name"/>
-                                </el-form-item>
-                            </el-col>
-                        </el-row>
-                        <el-row>
-                            <el-col :span="12">
-                                <el-form-item label="性别">
-                                    <el-select v-model="formData.sex">
-                                        <el-option label="不限" value="0"></el-option>
-                                        <el-option label="男" value="1"></el-option>
-                                        <el-option label="女" value="2"></el-option>
-                                    </el-select>
-                                </el-form-item>
-                            </el-col>
-                            <el-col :span="12">
-                                <el-form-item label="适用年龄">
-                                    <el-input v-model="formData.age"/>
-                                </el-form-item>
-                            </el-col>
-                        </el-row>
-                        <el-row>
-                            <el-col :span="12">
-                                <el-form-item label="类型">
-                                    <el-select v-model="formData.type">
-                                        <el-option label="检查" value="1"></el-option>
-                                        <el-option label="检验" value="2"></el-option>
-                                    </el-select>
-                                </el-form-item>
-                            </el-col>
-                            <el-col :span="12">
-                                <el-form-item label="价格">
-                                    <el-input v-model="formData.price"/>
-                                </el-form-item>
-                            </el-col>
-                        </el-row>
-                        <el-row>
-                            <el-col :span="24">
-                                <el-form-item label="项目说明">
-                                    <el-input v-model="formData.remark" type="textarea"></el-input>
-                                </el-form-item>
-                            </el-col>
-                        </el-row>
-                        <el-row>
-                            <el-col :span="24">
-                                <el-form-item label="注意事项">
-                                    <el-input v-model="formData.attention" type="textarea"></el-input>
-                                </el-form-item>
-                            </el-col>
-                        </el-row>
-                    </el-form>
-                    <div slot="footer" class="dialog-footer">
-                        <el-button @click="dialogFormVisible4Edit = false">取消</el-button>
-                        <el-button type="primary" @click="handleEdit()">确定</el-button>
-                    </div>
+                    <!--                    </div>-->
                 </el-dialog>
             </div>
         </div>
@@ -207,6 +98,8 @@
 <script src="../plugins/elementui/index.js"></script>
 <script type="text/javascript" src="../js/jquery.min.js"></script>
 <script src="../js/axios-0.18.0.js"></script>
+<!--<script src="https://webapi.amap.com/loader.js"></script>-->
+<script type="text/javascript" src="https://webapi.amap.com/maps?v=2.0&key=1c09217beec9bb56467a059de68f25c6"></script>
 <script>
     var vue = new Vue({
         el: '#app',
@@ -220,17 +113,48 @@
             dataList: [],//当前页要展示的分页列表数据
             formData: {},//表单数据
             dialogFormVisible: false,//增加表单是否可见
-            dialogFormVisible4Edit: false,//编辑表单是否可见
-            rules: {//校验规则
-                code: [{required: true, message: '项目编码为必填项', trigger: 'blur'}],
-                name: [{required: true, message: '项目名称为必填项', trigger: 'blur'}]
-            }
+            lon: "",
+            lat: "",
         },
         //钩子函数，VUE对象初始化完成后自动执行
         created() {
-            this.findPage();
+            // this.findPage();
+        },
+        mounted() {
+            // this.initMap();
         },
         methods: {
+            initMap() {
+                this.$nextTick(() => {
+                    map = new AMap.Map("mapcontainer", {
+                        zoom: 15, viewMode: '3D', style: 'fresh'
+                    });
+                    //map的点击事件
+                    // map.on('click', function (e) {
+                    //     this.lon = e.lnglat.getLng();
+                    //     this.lat = e.lnglat.getLat();
+                    //     alert(this.lon + "-" + this.lat);
+                    // });
+                    //输入提示
+                    var autoOptions = {
+                        input: "tipinput"
+                    };
+                    AMap.plugin(['AMap.PlaceSearch', 'AMap.AutoComplete'], function () {
+                        var auto = new AMap.AutoComplete(autoOptions);
+                        var placeSearch = new AMap.PlaceSearch({
+                            map: map
+                        });  //构造地点查询类
+                        auto.on("select", select);//注册监听，当选中某条记录时会触发
+                        function select(e) {
+                            placeSearch.setCity(e.poi.adcode);
+                            placeSearch.search(e.poi.name);  //关键字查询查询
+                            //查询到了所有的内容
+                            alert(e.poi.address+"-"+e.poi.name+"-"+e.poi.location.lat+"-"+e.poi.location.lng);
+                        }
+                    });
+                })
+
+            },
             findSearch() {
                 var queryParam = {
                     currentPage: 1,

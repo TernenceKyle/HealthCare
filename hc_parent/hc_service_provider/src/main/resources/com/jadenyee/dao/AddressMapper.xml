@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jadenyee.dao.AddressMapper">
+    <sql id="base">
+        SELECT id,name,locationName,longtitude,latitude,valid FROM t_address
+    </sql>
+    <select id="findAll" resultType="com.jadenyee.pojo.Address">
+        <include refid="base" />
+    </select>
+    <select id="findById" parameterType="Integer" resultType="com.jadenyee.pojo.Address">
+        <include refid="base" />
+        WHERE id = #{id}
+    </select>
+    <select id="findByQueryString" resultType="com.jadenyee.pojo.Address" parameterType="string">
+        <include refid="base" />
+        <where>
+            <if test="value != null and value.length > 0">
+                name LIKE #{value} OR locationName LIKE #{value}
+            </if>
+        </where>
+    </select>
+    <insert id = "add" parameterType="com.jadenyee.pojo.Address">
+        <selectKey keyProperty="id" resultType="integer" order="AFTER">
+            SELECT LAST_INSERT_ID()
+        </selectKey>
+        INSERT INTO t_address(name,locationName,longtitude,latitude,valid)
+        VALUE(#{name},#{locationName},#{longtitude},#{latitude},#{valid})
+    </insert>
+    <update id="update" parameterType="com.jadenyee.pojo.Address">
+        UPDATE t_address
+        <set>
+            <if test="name != null">
+                name = #{name},
+            </if>
+            <if test="locationName != null">
+                locationName = #{locationName},
+            </if>
+            <if test="longtitude != null">
+                longtitude = #{longtitude},
+            </if>
+            <if test="latitude != null">
+                latitude = #{latitude},
+            </if>
+            <if test="valid != null">
+                valid = #{valid},
+            </if>
+        </set>
+    </update>
+    <delete id="delete" parameterType="integer">
+        DELETE FROM t_address WHERE id = #{id}
+    </delete>
+</mapper>
