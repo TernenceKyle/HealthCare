@@ -10,9 +10,10 @@
         <result property="orderType" column="orderType"/>
         <result property="orderStatus" column="orderStatus"/>
         <result property="setmealId" column="setmeal_id"/>
+        <result property="addressId" column="address_id"/>
     </resultMap>
     <sql id="base">
-        SELECT id, member_id, orderDate, orderType, orderStatus, setmeal_id
+        SELECT id, member_id, orderDate, orderType, orderStatus, setmeal_id, address_id
         FROM t_order
     </sql>
     <select id="findAll" resultMap="orderMap">
@@ -34,8 +35,8 @@
         <selectKey order="AFTER" keyProperty="id" resultType="integer">
             SELECT LAST_INSERT_ID()
         </selectKey>
-        INSERT INTO t_order(member_id, orderDate, orderType, orderStatus, setmeal_id)
-        VALUE (#{memberId},#{orderDate},#{orderType},#{orderStatus},#{setmealId})
+        INSERT INTO t_order(member_id, orderDate, orderType, orderStatus, setmeal_id,address_id)
+        VALUE (#{memberId},#{orderDate},#{orderType},#{orderStatus},#{setmealId},#{addressId})
     </insert>
     <update id="update" parameterType="com.jadenyee.pojo.Order">
         UPDATE t_order
@@ -55,6 +56,9 @@
             <if test="setmeal_id != null ">
                 setmeal_id = #{setmeal_id}
             </if>
+            <if test="address_id != null ">
+                address_id = #{address_id}
+            </if>
             WHERE id = #{id}
         </set>
     </update>
@@ -64,15 +68,18 @@
         WHERE id = #{id}
     </delete>
     <select id="getOrderDetail" resultType="map" parameterType="integer">
-        SELECT m.name      as member,
-               s.name      as setmeal,
-               o.orderDate as orderDate,
-               o.orderType as orderType
+        SELECT m.name         as member,
+               s.name         as setmeal,
+               a.locationName as address,
+               o.orderDate    as orderDate,
+               o.orderType    as orderType
         FROM t_order as o,
              t_member as m,
-             t_setmeal as s
+             t_setmeal as s,
+             t_address as a
         WHERE o.member_id = m.id
           AND o.setmeal_id = s.id
+          AND o.address_id = a.id
           AND o.id = #{id}
     </select>
     <select id="countByDate" resultType="integer" parameterType="string">
@@ -94,6 +101,7 @@
     <select id="countFinishedByPeriod" resultType="integer">
         SELECT COUNT(id)
         FROM t_order
-        WHERE orderStatus = '到诊' AND orderDate BETWEEN #{start} AND #{end}
+        WHERE orderStatus = '到诊'
+          AND orderDate BETWEEN #{start} AND #{end}
     </select>
 </mapper>
