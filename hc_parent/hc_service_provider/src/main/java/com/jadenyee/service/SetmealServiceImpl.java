@@ -6,7 +6,6 @@ import com.jadenyee.dao.SetmealMapper;
 import com.jadenyee.entity.PageResult;
 import com.jadenyee.entity.QueryPageBean;
 import com.jadenyee.pojo.Setmeal;
-import com.sun.org.apache.regexp.internal.RE;
 import freemarker.template.Configuration;
 import freemarker.template.Template;
 import org.apache.dubbo.config.annotation.Service;
@@ -16,9 +15,6 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.servlet.view.freemarker.FreeMarkerConfigurer;
 
 import java.io.*;
-import java.net.URL;
-import java.nio.file.Files;
-import java.nio.file.Paths;
 import java.util.*;
 
 @Service(interfaceClass = SetmealService.class)
