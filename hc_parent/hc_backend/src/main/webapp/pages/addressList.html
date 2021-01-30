@@ -8,7 +8,7 @@
     <meta name="description" content="传智健康">
     <meta name="keywords" content="传智健康">
     <meta content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no" name="viewport">
-    <link rel="stylesheet" href="https://cache.amap.com/lbs/static/main1119.css"/>
+    <!--    <link rel="stylesheet" href="https://cache.amap.com/lbs/static/main1119.css"/>-->
     <!-- 引入样式 -->
     <link rel="stylesheet" href="../plugins/elementui/index.css">
     <link rel="stylesheet" href="../plugins/font-awesome/css/font-awesome.min.css">
@@ -16,11 +16,24 @@
 </head>
 <style>
     #mapcontainer {
-        width: 750px;
-        height: 350px;
+        width: 820px;
+        height: 400px;
     }
+
     .amap-sug-result {
         z-index: 9999;
+    }
+
+    #myPageTop {
+        position: absolute;
+        top: 90px;
+        right: 20px;
+        background: #fff none repeat scroll 0 0;
+        border: 1px solid #ccc;
+        margin: 10px auto;
+        padding: 6px;
+        font-family: "Microsoft Yahei", "Î¢ÈíÑÅºÚ", "Pinghei";
+        font-size: 14px;
     }
 </style>
 <body class="hold-transition">
@@ -30,7 +43,7 @@
         <el-breadcrumb separator-class="el-icon-arrow-right" class="breadcrumb">
             <el-breadcrumb-item :to="{ path: '/' }">首页</el-breadcrumb-item>
             <el-breadcrumb-item>地址管理</el-breadcrumb-item>
-            <el-breadcrumb-item>检查项管理</el-breadcrumb-item>
+            <el-breadcrumb-item>地址列表</el-breadcrumb-item>
         </el-breadcrumb>
     </div>
     <div class="app-container">
@@ -43,7 +56,8 @@
             </div>
             <el-table size="small" current-row-key="id" :data="dataList" stripe highlight-current-row>
                 <el-table-column type="index" align="center" label="序号"></el-table-column>
-                <el-table-column prop="location" label="公司地点" align="center"></el-table-column>
+                <el-table-column prop="name" label="地点名称" align="center"></el-table-column>
+                <el-table-column prop="locationName" label="地址" align="center"></el-table-column>
                 <el-table-column prop="longitude" label="经度" align="center"></el-table-column>
                 <el-table-column prop="latitude" label="纬度" align="center"></el-table-column>
                 <el-table-column label="是否有效" align="center">
@@ -70,13 +84,12 @@
             <!-- 新增标签弹层 -->
             <div class="add-form">
                 <el-dialog title="新增地址" :visible.sync="dialogFormVisible" @open="initMap()">
-                    <!--                    <div style="width: 600px;height: 400px">-->
                     <div id="mapcontainer"></div>
-                    <div id="myPageTop">
+                    <div id="myPageTop" style="z-index: 9900">
                         <table>
                             <tr>
                                 <td>
-                                    <label>请输入关键字：</label>
+                                    <label>搜索并设置地点：</label>
                                 </td>
                             </tr>
                             <tr>
@@ -85,8 +98,9 @@
                                 </td>
                             </tr>
                         </table>
+                        <el-button type="primary" size="medium" icon="el-icon-plus" @click="addAddress()">添加指定地址
+                        </el-button>
                     </div>
-                    <!--                    </div>-->
                 </el-dialog>
             </div>
         </div>
@@ -113,18 +127,39 @@
             dataList: [],//当前页要展示的分页列表数据
             formData: {},//表单数据
             dialogFormVisible: false,//增加表单是否可见
-            lon: "",
-            lat: "",
+            address: {
+                name: '',
+                locationName: '',
+                longitude: null,
+                latitude: null
+            }
         },
         //钩子函数，VUE对象初始化完成后自动执行
         created() {
-            // this.findPage();
+            this.findPage();
         },
         mounted() {
             // this.initMap();
         },
         methods: {
+            addAddress() {
+                axios.post("/address/add.do", this.address).then((res) => {
+                    if (res.data.flag) {
+                        this.$message({message: res.data.message, type: "success"});
+                    } else {
+                        this.$message.error(res.data.message);
+                    }
+                }).catch((r) => {
+                    this.showMessage(r);
+                }).finally(() => {
+                    this.findPage();
+                    this.dialogFormVisible = false;
+                    this.resetAddress();
+                });
+            },
             initMap() {
+                //
+                var _this = this;
                 this.$nextTick(() => {
                     map = new AMap.Map("mapcontainer", {
                         zoom: 15, viewMode: '3D', style: 'fresh'
@@ -149,7 +184,10 @@
                             placeSearch.setCity(e.poi.adcode);
                             placeSearch.search(e.poi.name);  //关键字查询查询
                             //查询到了所有的内容
-                            alert(e.poi.address+"-"+e.poi.name+"-"+e.poi.location.lat+"-"+e.poi.location.lng);
+                            _this.address.name = e.poi.name;
+                            _this.address.locationName = e.poi.address;
+                            _this.address.latitude = e.poi.location.lat;
+                            _this.address.longitude = e.poi.location.lng;
                         }
                     });
                 })
@@ -161,7 +199,7 @@
                     pageSize: 10,
                     queryString: this.pagination.queryString,
                 }
-                axios.post("/checkitem/itemlist.do", queryParam).then((res) => {
+                axios.post("/address/findPage.do", queryParam).then((res) => {
                     this.pagination.total = res.data.total;
                     this.dataList = res.data.rows;
                     this.pagination.currentPage = 1;
@@ -179,56 +217,6 @@
                     return;
                 }
             },
-            //编辑
-            handleEdit() {
-                this.$refs['dataEditForm'].validate((valid) => {
-                    if (valid) {
-                        //进行数据的异步更新
-                        axios.post("/checkitem/update.do", this.formData).then((res) => {
-                            if (res.data.flag) {
-                                this.$message({message: res.data.message, type: "success"});
-                            } else {
-                                this.$message.error(res.data.message);
-                            }
-                        }).catch((r) => {
-                            this.showMessage(r);
-                        });
-                        this.dialogFormVisible4Edit = false;
-                        //刷新当前页面的数据
-                        this.findPage();
-                    } else {
-                        //表单校验失败
-                        this.$message.error("表单数据校验失败");
-                        return false;
-                    }
-                    this.findPage();
-                });
-            },
-            //添加
-            handleAdd() {
-                //进行表单校验
-                this.$refs['dataAddForm'].validate((valid) => {
-                    //校验成功后的执行逻辑
-                    if (valid) {
-                        axios.post("/checkitem/add.do", this.formData).then((res) => {
-                            if (res.data.flag) {
-                                //弹出服务端返回的消息
-                                this.$message(
-                                    {message: res.data.message, type: "success"});
-                            } else {
-                                //弹出添加错误消息提示信息
-                                this.$message.error(res.data.message)
-                            }
-                        }).catch((r) => {
-                            this.showMessage(r);
-                        })
-                    } else {
-                        this.$message.error("表单校验失败！请填写正确的信息!");
-                    }
-                });
-                this.dialogFormVisible = false;
-                this.findPage();
-            },
             //分页查询
             findPage() {
                 var queryParam = {
@@ -236,7 +224,7 @@
                     pageSize: this.pagination.pageSize,
                     queryString: this.pagination.queryString,
                 }
-                axios.post("/checkitem/itemlist.do", queryParam).then((res) => {
+                axios.post("/address/findPage.do", queryParam).then((res) => {
                     this.pagination.total = res.data.total;
                     this.dataList = res.data.rows;
                 }).catch((r) => {
@@ -244,23 +232,18 @@
                 })
             },
             // 重置表单
-            resetForm() {
+            resetAddress() {
                 //将表单的双向绑定按钮清除
-                this.formData = {};
+                this.address.longitude = null;
+                this.address.latitude = null;
+                this.address.locationName = "";
+                this.address.name = "";
             },
-            // 弹出添加窗口
+            // 弹出新增地址添加窗口
             handleCreate() {
                 //开启点击新建按钮弹出窗口
                 this.formData = {};
                 this.dialogFormVisible = true;
-            },
-            // 弹出编辑窗口
-            handleUpdate(row) {
-                axios.get("/checkitem/get.do?id=" + row.id).then((res) => {
-                    this.formData = res.data['data'];
-                });
-                this.activeName = 'first';
-                this.dialogFormVisible4Edit = true;
             },
             //切换页码
             handleCurrentChange(currentPage) {
@@ -269,8 +252,10 @@
             },
             // 删除
             handleDelete(row) {
+                //发送URL请求需要先将参数进行封装
+                var param = {id:row.id};
                 this.$confirm("确认删除吗？", "提示", {type: 'warning'}).then(() => {
-                    axios.post("/checkitem/delete.do", row).then((res) => {
+                    axios.delete("/address/delete.do",{params:param}).then((res) => {
                         if (res.data.flag) {
                             this.$message(
                                 {
@@ -278,7 +263,6 @@
                                     type: 'success'
                                 }
                             );
-                            this.findPage();
                         } else {
                             this.$message.error(res.data.message);
                         }

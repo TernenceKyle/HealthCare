@@ -24,8 +24,13 @@ public class AddressServiceImpl implements AddressService{
      */
     @Override
     public Page<Address> getAddressByPage(QueryPageBean bean) {
-        PageHelper.startPage(bean.getCurrentPage(),bean.getPageSize());
-        Page<Address> byQueryString = mapper.findByQueryString(bean.getQueryString());
+        Integer currentPage = bean.getCurrentPage();
+        Integer pageSize = bean.getPageSize();
+        String queryString = bean.getQueryString();
+        if (queryString == null)  queryString = "";
+        PageHelper.startPage(currentPage, pageSize);
+        queryString = "%"+ queryString.trim()+"%";
+        Page<Address> byQueryString = mapper.findByQueryString(queryString);
         return byQueryString;
     }
 

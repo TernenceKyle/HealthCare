@@ -6,7 +6,7 @@ public class Address implements Serializable {
     private Integer id;
     private String name;
     private String locationName;
-    private Double longtitude;
+    private Double longitude;
     private Double latitude;
     private Integer valid;
 
@@ -34,12 +34,12 @@ public class Address implements Serializable {
         this.locationName = locationName;
     }
 
-    public Double getLongtitude() {
-        return longtitude;
+    public Double getLongitude() {
+        return longitude;
     }
 
-    public void setLongtitude(Double longtitude) {
-        this.longtitude = longtitude;
+    public void setLongitude(Double longitude) {
+        this.longitude = longitude;
     }
 
     public Double getLatitude() {
@@ -61,11 +61,11 @@ public class Address implements Serializable {
     public Address() {
     }
 
-    public Address(Integer id, String name, String locationName, Double longtitude, Double latitude, Integer valid) {
+    public Address(Integer id, String name, String locationName, Double longitude, Double latitude, Integer valid) {
         this.id = id;
         this.name = name;
         this.locationName = locationName;
-        this.longtitude = longtitude;
+        this.longitude = longitude;
         this.latitude = latitude;
         this.valid = valid;
     }
@@ -76,7 +76,7 @@ public class Address implements Serializable {
                 "id=" + id +
                 ", name='" + name + '\'' +
                 ", locationName='" + locationName + '\'' +
-                ", longtitude=" + longtitude +
+                ", longitude=" + longitude +
                 ", latitude=" + latitude +
                 ", valid=" + valid +
                 '}';

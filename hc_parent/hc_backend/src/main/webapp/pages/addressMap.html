@@ -117,14 +117,13 @@
                     map = new AMap.Map("container", {
                         zoom: 15, viewMode: '3D'
                     });
-                    // map.setStyle("fresh");
                     /*遍历数据创建 marker */
                     var locArray = this.locList;
                     for (var index in locArray) {
                         var name = locArray[index].name;
                         var locationName = locArray[index].locationName;
                         var marker = new AMap.Marker({
-                            position: new AMap.LngLat(locArray[index].longtitude, locArray[index].latitude),
+                            position: new AMap.LngLat(locArray[index].longitude, locArray[index].latitude),
                             offset: new AMap.Pixel(-10, -10),
                             title: locArray[index].locationName
                         });

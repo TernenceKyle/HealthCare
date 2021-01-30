@@ -4,7 +4,7 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.jadenyee.dao.AddressMapper">
     <sql id="base">
-        SELECT id,name,locationName,longtitude,latitude,valid FROM t_address
+        SELECT id,name,locationName,longitude,latitude,valid FROM t_address
     </sql>
     <select id="findAll" resultType="com.jadenyee.pojo.Address">
         <include refid="base" />
@@ -25,8 +25,8 @@
         <selectKey keyProperty="id" resultType="integer" order="AFTER">
             SELECT LAST_INSERT_ID()
         </selectKey>
-        INSERT INTO t_address(name,locationName,longtitude,latitude,valid)
-        VALUE(#{name},#{locationName},#{longtitude},#{latitude},#{valid})
+        INSERT INTO t_address(name,locationName,longitude,latitude,valid)
+        VALUE(#{name},#{locationName},#{longitude},#{latitude},#{valid})
     </insert>
     <update id="update" parameterType="com.jadenyee.pojo.Address">
         UPDATE t_address
@@ -38,7 +38,7 @@
                 locationName = #{locationName},
             </if>
             <if test="longtitude != null">
-                longtitude = #{longtitude},
+                longitude = #{longitude},
             </if>
             <if test="latitude != null">
                 latitude = #{latitude},
