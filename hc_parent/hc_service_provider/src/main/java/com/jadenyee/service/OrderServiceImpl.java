@@ -60,6 +60,8 @@ public class OrderServiceImpl implements OrderService {
         String tel = (String) orderInfo.get("telephone");
         Member member = memberService.findMember(tel);
         Integer setmealID = Integer.valueOf((String) orderInfo.get("setmealId"));
+        //由于特殊原因选中的 地址id 为int 类型可以直接进行强转
+        int addressID = (int)orderInfo.get("addressId");
         Order newOrder;
         if (member == null) {
             Member submit = new Member();
@@ -70,7 +72,7 @@ public class OrderServiceImpl implements OrderService {
             submit.setRegTime(new Date());
             //会员注册成功后，进行新增套餐预约操作
             if (memberService.submit(submit)) {
-                newOrder = new Order(submit.getId(), date, Order.ORDERTYPE_WEIXIN, Order.ORDERSTATUS_NO, setmealID);
+                newOrder = new Order(submit.getId(), date, Order.ORDERTYPE_WEIXIN, Order.ORDERSTATUS_NO, setmealID,addressID);
                 if (orderMapper.add(newOrder)){
                     orderSetting.setReservations(orderSetting.getReservations()+1);
                     osMapper.update(orderSetting);

@@ -17,7 +17,7 @@ public class Order implements Serializable{
     private String orderType;//预约类型 电话预约/微信预约
     private String orderStatus;//预约状态（是否到诊）
     private Integer setmealId;//体检套餐id
-
+    private Integer addressId;//预约地址 ID
     public Order() {
     }
 
@@ -40,6 +40,15 @@ public class Order implements Serializable{
         this.orderType = orderType;
         this.orderStatus = orderStatus;
         this.setmealId = setmealId;
+    }
+
+    public Order(Integer memberId, Date orderDate, String orderType, String orderStatus, Integer setmealId, Integer addressId) {
+        this.memberId = memberId;
+        this.orderDate = orderDate;
+        this.orderType = orderType;
+        this.orderStatus = orderStatus;
+        this.setmealId = setmealId;
+        this.addressId = addressId;
     }
 
     public Integer getId() {
@@ -90,6 +99,14 @@ public class Order implements Serializable{
         this.setmealId = setmealId;
     }
 
+    public Integer getAddressId() {
+        return addressId;
+    }
+
+    public void setAddressId(Integer addressId) {
+        this.addressId = addressId;
+    }
+
     @Override
     public String toString() {
         return "Order{" +
@@ -99,6 +116,7 @@ public class Order implements Serializable{
                 ", orderType='" + orderType + '\'' +
                 ", orderStatus='" + orderStatus + '\'' +
                 ", setmealId=" + setmealId +
+                ", addressId=" + addressId +
                 '}';
     }
 }

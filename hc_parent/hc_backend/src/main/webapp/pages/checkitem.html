@@ -231,7 +231,7 @@
             this.findPage();
         },
         methods: {
-            findSearch(){
+            findSearch() {
                 var queryParam = {
                     currentPage: 1,
                     pageSize: 10,
@@ -241,24 +241,24 @@
                     this.pagination.total = res.data.total;
                     this.dataList = res.data.rows;
                     this.pagination.currentPage = 1;
-                }).catch((r)=>{
+                }).catch((r) => {
                     this.showMessage(r);
                 })
             },
-            showMessage(r){
-                if(r == 'Error: Request failed with status code 403'){
+            showMessage(r) {
+                if (r == 'Error: Request failed with status code 403') {
                     //权限不足
                     this.$message.error('无访问权限');
                     return;
-                }else{
+                } else {
                     this.$message.error('未知错误');
                     return;
                 }
             },
             //编辑
             handleEdit() {
-                this.$refs['dataEditForm'].validate((valid)=>{
-                    if(valid) {
+                this.$refs['dataEditForm'].validate((valid) => {
+                    if (valid) {
                         //进行数据的异步更新
                         axios.post("/checkitem/update.do", this.formData).then((res) => {
                             if (res.data.flag) {
@@ -266,13 +266,13 @@
                             } else {
                                 this.$message.error(res.data.message);
                             }
-                        }).catch((r)=>{
-                           this.showMessage(r);
+                        }).catch((r) => {
+                            this.showMessage(r);
                         });
                         this.dialogFormVisible4Edit = false;
                         //刷新当前页面的数据
                         this.findPage();
-                    }else {
+                    } else {
                         //表单校验失败
                         this.$message.error("表单数据校验失败");
                         return false;
@@ -295,7 +295,7 @@
                                 //弹出添加错误消息提示信息
                                 this.$message.error(res.data.message)
                             }
-                        }).catch((r)=>{
+                        }).catch((r) => {
                             this.showMessage(r);
                         })
                     } else {
@@ -315,7 +315,7 @@
                 axios.post("/checkitem/itemlist.do", queryParam).then((res) => {
                     this.pagination.total = res.data.total;
                     this.dataList = res.data.rows;
-                }).catch((r)=>{
+                }).catch((r) => {
                     this.showMessage(r);
                 })
             },
@@ -332,10 +332,10 @@
             },
             // 弹出编辑窗口
             handleUpdate(row) {
-                axios.get("/checkitem/get.do?id="+row.id).then((res)=>{
+                axios.get("/checkitem/get.do?id=" + row.id).then((res) => {
                     this.formData = res.data['data'];
                 });
-                this.activeName='first';
+                this.activeName = 'first';
                 this.dialogFormVisible4Edit = true;
             },
             //切换页码
@@ -345,8 +345,8 @@
             },
             // 删除
             handleDelete(row) {
-                this.$confirm("确认删除吗？","提示",{type:'warning'}).then(()=>{
-                    axios.post("/checkitem/delete.do",row).then((res) => {
+                this.$confirm("确认删除吗？", "提示", {type: 'warning'}).then(() => {
+                    axios.post("/checkitem/delete.do", row).then((res) => {
                         if (res.data.flag) {
                             this.$message(
                                 {
@@ -358,15 +358,15 @@
                         } else {
                             this.$message.error(res.data.message);
                         }
-                    }).catch((r)=>{
+                    }).catch((r) => {
                         this.showMessage(r);
-                    }).finally(()=>{
+                    }).finally(() => {
                         this.findPage();
                     });
-                }).catch(()=>{
+                }).catch(() => {
                     this.$message({
-                        message:'操作已取消',
-                        type:'info'
+                        message: '操作已取消',
+                        type: 'info'
                     });
                 });
             }
