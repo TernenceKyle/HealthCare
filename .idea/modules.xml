@@ -7,7 +7,6 @@
       <module fileurl="file://$PROJECT_DIR$/hc_parent/hc_interface/hc_interface.iml" filepath="$PROJECT_DIR$/hc_parent/hc_interface/hc_interface.iml" />
       <module fileurl="file://$PROJECT_DIR$/hc_parent/hc_mobile/hc_mobile.iml" filepath="$PROJECT_DIR$/hc_parent/hc_mobile/hc_mobile.iml" />
       <module fileurl="file://$PROJECT_DIR$/hc_parent/hc_parent.iml" filepath="$PROJECT_DIR$/hc_parent/hc_parent.iml" />
-      <module fileurl="file://$PROJECT_DIR$/hc_parent/hc_service_provider/hc_service_provider.iml" filepath="$PROJECT_DIR$/hc_parent/hc_service_provider/hc_service_provider.iml" />
       <module fileurl="file://$PROJECT_DIR$/hc_parent/health_jobs/health_jobs.iml" filepath="$PROJECT_DIR$/hc_parent/health_jobs/health_jobs.iml" />
     </modules>
   </component>
