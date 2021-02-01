@@ -45,6 +45,7 @@ public class SetmealServiceImpl implements SetmealService {
         } else {
             queryString = "%" + queryString.trim() + "%";
         }
+        this.generateMobileStaticHtml();
         Page<Setmeal> res = mapper.findByCondition(queryString);
         return new PageResult(res.getTotal(), res.getResult());
     }
