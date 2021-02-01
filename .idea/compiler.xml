@@ -8,7 +8,6 @@
         <outputRelativeToContentRoot value="true" />
         <module name="hc_backend" />
         <module name="hc_mobile" />
-        <module name="hc_service_provider" />
         <module name="hc_common" />
         <module name="hc_interface" />
         <module name="health_jobs" />
