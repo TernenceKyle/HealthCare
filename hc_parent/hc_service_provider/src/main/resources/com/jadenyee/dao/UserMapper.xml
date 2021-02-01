@@ -12,6 +12,7 @@
         <result column="remark" property="remark" />
         <result column="station" property="station" />
         <result column="telephone" property="telephone" />
+        <result column="avatar" property="avatar" />
         <collection property="roles"
                     ofType="com.jadenyee.pojo.Role"
                     javaType="java.util.HashSet"
@@ -27,7 +28,8 @@
                password,
                remark,
                station,
-               telephone
+               telephone,
+               avatar
         FROM t_user
     </sql>
     <select id="findAll" resultType="com.jadenyee.pojo.User">
@@ -63,19 +65,20 @@
             <if test="password != null">
                 password = #{password},
             </if>
-            <if test="">
-
+            <if test="avatar != null">
+                avatar = #{avatar},
             </if>
             <if test="remark != null">
-                remark = #{remark}
+                remark = #{remark},
             </if>
             <if test="station != null">
-                station = #{station}
+                station = #{station},
             </if>
             <if test="telephone != null">
-                telephone = #{telephone}
+                telephone = #{telephone},
             </if>
         </set>
+            WHERE id = #{id}
     </update>
     <delete id="delete" parameterType="integer" >
         DELETE FROM t_user WHERE id = #{id}
