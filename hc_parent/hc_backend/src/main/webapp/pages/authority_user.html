@@ -395,7 +395,7 @@
             },
             //编辑用户和角色信息
             handleUserRole() {
-                axios.post("/authority/editUser.do" ,this.formData).then((res) => {
+                axios.post("/authority/editUser.do?userId=" + user_id ,this.formData).then((res) => {
                     if (res.data.flag) {
                         axios.post("/authority/userRoleAdd.do?userId=" + user_id ,this.checkitemIds).then((res) => {
                             if (res.data.flag) {

@@ -83,8 +83,9 @@ public class AuthorityController {
     }
     //编辑用户信息
     @RequestMapping("/editUser")
-    public Result editUser (@RequestBody User user){
+    public Result editUser (Integer userId,@RequestBody User user){
         try {
+            user.setId(userId);
             authorityService.editUser(user);
             return new Result(true,MessageConstant.EDIT_USER_SUCCESS);
         }catch (Exception e){
@@ -98,7 +99,7 @@ public class AuthorityController {
     public Result userRoleAdd (Integer userId,@RequestBody List<Integer> roleId){
         try {
             authorityService.editUserRole(userId,roleId);
-            return new Result(true,MessageConstant.ADD_USER_ROLE_SUCCESS);
+            return new Result(true,MessageConstant.EDIT_USER_SUCCESS);
         }catch (Exception e){
             e.printStackTrace();
             return new Result(false,MessageConstant.ADD_USER_ROLE_FAIL);

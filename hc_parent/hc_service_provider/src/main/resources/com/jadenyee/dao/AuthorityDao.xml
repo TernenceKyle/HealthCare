@@ -20,7 +20,7 @@
     </select>
     <!--根据id查询角色-->
     <select id="findAllUser" resultType="com.jadenyee.pojo.User">
-        select * from t_user where id = #{id}
+        select username,gender,birthday,remark,telephone,station from t_user where id = #{id}
     </select>
     <!--编辑用户信息-->
     <update id="editUser" parameterType="com.jadenyee.pojo.User">

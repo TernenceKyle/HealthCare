@@ -88,17 +88,24 @@ public class AuthorityServiceImpl implements AuthorityService {
     //编辑用户信息
     @Override
     public void editUser(User user) {
+
         //用户密码
         String password = user.getPassword();
-        //密码加密
-        BCryptPasswordEncoder passwordEncoder=new BCryptPasswordEncoder();
-        //加密
-        String newPassword = passwordEncoder.encode(password);
-        //将加后的密码写入
-        user.setPassword(newPassword);
+        if (password != null && password.length() > 0){
+            //密码加密
+            BCryptPasswordEncoder passwordEncoder=new BCryptPasswordEncoder();
+            //加密
+            String newPassword = passwordEncoder.encode(password);
+            //将加后的密码写入
+            user.setPassword(newPassword);
+        }else {
+            user.setPassword(null);
+        }
+
         //判断用户状态
         if (user.getStation() == null){
             user.setStation("0");
+            System.out.println();
         }
         authorityDao.editUser(user);
     }
