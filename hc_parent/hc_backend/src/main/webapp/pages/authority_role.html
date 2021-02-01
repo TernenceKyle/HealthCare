@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <!-- 页面meta -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>传智健康</title>
+    <meta name="description" content="传智健康">
+    <meta name="keywords" content="传智健康">
+    <meta content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no" name="viewport">
+    <!-- 引入样式 -->
+    <link rel="stylesheet" href="../plugins/elementui/index.css">
+    <link rel="stylesheet" href="../plugins/font-awesome/css/font-awesome.min.css">
+    <link rel="stylesheet" href="../css/style.css">
+    <!-- 引入组件库 -->
+    <script type="text/javascript" src="../js/jquery.min.js"></script>
+    <script src="../js/vue.js"></script>
+    <script src="../plugins/elementui/index.js"></script>
+    <script src="../js/axios-0.18.0.js"></script>
+    <style>
+        .datatable {
+            border-collapse:collapse;border: none;
+            position: relative;
+            box-sizing: border-box;
+            -webkit-box-flex: 1;
+            width: 100%;
+            max-width: 100%;
+            font-size: 14px;
+            color: rgb(96, 98, 102);
+            overflow: hidden;
+            flex: 1 1 0%;
+        }
+
+        .datatable td, .datatable th {
+            border-bottom: 1px solid #d3dce6;
+            padding: 12px 0;
+            min-width: 0;
+            -webkit-box-sizing: border-box;
+            box-sizing: border-box;
+            text-overflow: ellipsis;
+            vertical-align: middle;
+            position: relative;
+            text-align: left;
+        }
+        .datatable tr:nth-child(2n){
+            background-color:#f3f3f3;
+        }
+    </style>
+</head>
+<body class="hold-transition">
+<div id="app">
+    <div class="content-header">
+        <h1>权限管理<small>角色管理</small></h1>
+        <el-breadcrumb separator-class="el-icon-arrow-right" class="breadcrumb">
+            <el-breadcrumb-item :to="{ path: '/' }">首页</el-breadcrumb-item>
+            <el-breadcrumb-item>权限管理</el-breadcrumb-item>
+            <el-breadcrumb-item>角色管理</el-breadcrumb-item>
+        </el-breadcrumb>
+    </div>
+    <div class="app-container">
+        <div class="box">
+
+            <el-table size="small" current-row-key="id" :data="dataList" stripe highlight-current-row>
+                <el-table-column type="index" label="序号" align="center" ></el-table-column>
+                <el-table-column prop="name" label="角色名" align="center"></el-table-column>
+                <el-table-column prop="keyword" label="角色关键词" align="center"></el-table-column>
+                <el-table-column prop="description" label="角色描述" align="center"></el-table-column>
+                <el-table-column label="操作" align="center">
+                    <template slot-scope="scope">
+                        <el-button type="primary" size="mini" @click="handlePermissions(scope.row)">添加权限</el-button>
+                    </template>
+                </el-table-column>
+                </el-table-column>
+            </el-table>
+
+            <!-- 添加权限弹层 -->
+            <div class="add-form">
+                <el-dialog title="添加权限" :visible.sync="dialogFormVisible4Edit">
+                    <div>
+                        <table class="datatable">
+                            <thead>
+                            <tr>
+                                <th>序号</th>
+                                <th>权限名</th>
+                                <th>权限关键词</th>
+                                <th>权限描述</th>
+                                <th>选择</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr v-for="c in tableData">
+                                <td><label :for="c.id">{{c.id}}</label></td>
+                                <td><label :for="c.id">{{c.name}}</label></td>
+                                <td><label :for="c.id">{{c.keyword}}</label></td>
+                                <td><label :for="c.id">{{c.description}}</label></td>
+                                <td>
+                                    <input :id="c.id" v-model="checkitemIds" type="checkbox" :value="c.id">
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <div slot="footer" class="dialog-footer">
+                        <el-button @click="dialogFormVisible4Edit = false">取消</el-button>
+                        <el-button type="primary" @click="handleRolePermission()">确定</el-button>
+                    </div>
+                </el-dialog>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+
+<script>
+
+    var vue = new Vue({
+        el: '#app',
+        data: {
+            role_id:null,//添加角色时所选用户的id
+            dataList: [],//列表数据
+            tableData: [],//添加权限窗口中对应的权限列表数据
+            checkitemIds: [],//添加角色对应的权限复选框，基于双向绑定可以进行回显和数据提交
+            dialogFormVisible4Edit: false,//控制添加权限窗口显示/隐藏
+        },
+        created() {
+            this.findRoleList();
+        },
+        methods: {
+
+            //查询全部角色列表数据
+            findRoleList() {
+                axios.get("/authority/roleList.do").then((res) => {
+                    if (res.data.flag){
+                        this.dataList = res.data.data;
+                    } else {
+                        this.$message.error(res.data.message);
+                    }
+                });
+            },
+
+            // 重置表单
+            resetForm() {
+                this.checkitemIds = [];
+            },
+            // 弹出添加权限窗口
+            handlePermissions(row) {
+                this.resetForm();
+                role_id = row.id;
+                //查询全部的权限
+                axios.get("/authority/findAllPermission.do").then((res)=>{
+                    if (res.data.flag){
+                        this.tableData = res.data.data;
+                        //查询角色对应的权限
+                        axios.get("/authority/findPermissionsByRole.do?id=" + row.id).then((res) => {
+                            if (res.data.flag){
+                                this.checkitemIds = res.data.data;
+                            } else {
+                                this.$message.error(res.data.message);
+                            }
+                        });
+                    } else {
+                        this.$message.error(res.data.message);
+                    }
+                });
+
+                this.dialogFormVisible4Edit = true;
+
+            },
+            //添加角色对应的权限
+            handleRolePermission() {
+                axios.post("/authority/rolePermissionAdd.do?roleId=" + role_id ,this.checkitemIds).then((res) => {
+                    if (res.data.flag) {
+                        this.$message({
+                            message: res.data.message,
+                            type: 'success'
+                        });
+                    } else {
+                        this.$message.error(res.data.message);
+                    }
+                }).finally(() => {
+                    this.findPage();
+                });
+                this.dialogFormVisible4Edit = false;
+            }
+        },
+
+    })
+
+</script>
+</html>
