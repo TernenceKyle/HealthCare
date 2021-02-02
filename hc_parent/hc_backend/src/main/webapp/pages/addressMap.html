@@ -15,8 +15,8 @@
 </head>
 <style>
     #container {
-        width: 1200px;
-        height: 500px;
+        width: 1600px;
+        height: 700px;
     }
     .amap-icon img {
         width: 25px;
@@ -115,7 +115,7 @@
                     },
                 }).then((AMap) => {
                     map = new AMap.Map("container", {
-                        zoom: 15, viewMode: '3D'
+                        zoom: 12, viewMode: '3D'
                     });
                     /*遍历数据创建 marker */
                     var locArray = this.locList;
