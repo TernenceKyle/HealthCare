@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+
+<mapper namespace="com.jadenyee.dao.OrderSettingListDao">
+    <resultMap id="baseResultMap" type="com.jadenyee.pojo.Order">
+        <id column="id" property="id"/>
+        <result column="member_id" property="memberId"/>
+        <result column="orderDate" property="orderDate"/>
+        <result column="orderType" property="orderType"/>
+        <result column="orderStatus" property="orderStatus"/>
+        <result column="setmeal_id" property="setmealId"/>
+    </resultMap>
+    <!--分页查询-->
+    <select id="findByCondition" parameterType="string" resultType="map">
+        SELECT o.id id,o.`orderDate` orderDate,o.`orderType` orderType,o.`orderStatus` orderStatus,
+        m.`name` name,m.`phoneNumber` phoneNumber,a.`name` address
+        FROM t_order o,t_member m,t_address a
+        WHERE m.id=o.member_id AND o.`address_id`=a.`id`
+        <if test="value != null and value.length > 0">
+            AND  (m.`phoneNumber` LIKE "%"#{value}"%" OR m.`name` LIKE "%"#{value}"%")
+        </if>
+
+    </select>
+
+    <!--查询套餐数据回显-->
+    <select id="findSetmeal" resultType="com.jadenyee.pojo.Setmeal">
+        select * from t_setmeal
+    </select>
+
+
+    <insert id="add" parameterType="map">
+        <selectKey resultType="java.lang.Integer" order="AFTER" keyProperty="member_id">
+            SELECT LAST_INSERT_ID()
+        </selectKey>
+        insert into t_member
+        (fileNumber,name,sex,idCard,phoneNumber,regTime,password,email,birthday,remark)
+        values
+        (#{fileNumber},#{name},#{sex},#{idCard},#{phoneNumber},#{regTime},#{password},#{email},#{birthday},#{remark})
+    </insert>
+
+    <insert id="addorder" parameterType="map">
+        insert into t_order
+        (member_id,orderDate,orderType,orderStatus,setmeal_id,address_id)
+        values
+        (#{member_id},#{orderDate},#{orderType},#{orderStatus},#{setmeal_id},#{address})
+    </insert>
+
+    <update id="update" parameterType="com.jadenyee.pojo.Order">
+        update t_order
+        <set>
+            <if test="orderStatus != null">
+                orderStatus = #{orderStatus},
+            </if>
+        </set>
+        where id = #{id}
+    </update>
+    <delete id="delete" parameterType="int">
+        delete from t_order where id=#{id}
+    </delete>
+
+    <!--查询地址信息-->
+    <select id="addressAll" resultType="com.jadenyee.pojo.Address">
+        SELECT * FROM t_address
+    </select>
+
+    <!--根据日期更新预约人数-->
+    <update id="editReservationsByOrderDate" parameterType="com.jadenyee.pojo.OrderSetting">
+        update t_ordersetting set reservations = #{reservations} where orderDate = #{orderDate}
+    </update>
+
+    <!--动态条件查询-->
+    <select id="findByConditionMove" parameterType="com.jadenyee.pojo.Order" resultMap="baseResultMap">
+        select * from t_order
+        <where>
+            <if test="id != null">
+                and id = #{id}
+            </if>
+            <if test="memberId != null">
+                and member_id = #{memberId}
+            </if>
+            <if test="orderDate != null">
+                and orderDate = #{orderDate}
+            </if>
+            <if test="orderType != null">
+                and orderType = #{orderType}
+            </if>
+            <if test="orderStatus != null">
+                and orderStatus = #{orderStatus}
+            </if>
+            <if test="setmealId != null">
+                and setmeal_id = #{setmealId}
+            </if>
+        </where>
+    </select>
+
+</mapper>

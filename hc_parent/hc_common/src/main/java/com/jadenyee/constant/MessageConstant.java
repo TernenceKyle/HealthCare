@@ -68,6 +68,22 @@ public class MessageConstant {
     public static final String ADD_USER_SUCCESS = "新增用户成功";
     public static final String ADD_USER_ROLE_FAIL = "新增用户的角色失败";
     public static final String ADD_USER_ROLE_SUCCESS = "新增用户的角色成功";
-    public static final String QUERY_ROLE_SUCCESS = "查询检查项成功";
-    public static final String QUERY_ROLE_FAIL = "查询检查项失败";
+    public static final String QUERY_USER_SUCCESS = "查询用户成功";
+    public static final String QUERY_USER_FAIL = "查询用户失败";
+    public static final String QUERY_ROLE_SUCCESS = "查询角色成功";
+    public static final String QUERY_ROLE_FAIL = "查询角色失败";
+    public static final String EDIT_USER_SUCCESS = "编辑用户成功";
+    public static final String EDIT_USER_FAIL = "编辑用户失败";
+    public static final String DELETE_USER_SUCCESS = "删除用户成功";
+    public static final String DELETE_USER_FAIL = "删除户失败";
+    public static final String QUERY_PERMISSION_SUCCESS = "查询权限成功";
+    public static final String QUERY_PERMISSION_FAIL = "查询权限失败";
+    public static final String ADD_ROLE_PERMISSION_FAIL = "新增角色的权限失败";
+    public static final String ADD_ROLE_PERMISSION_SUCCESS = "新增角色的权限成功";
+    public static final String ADD_PERMISSION_FAIL = "新增权限失败";
+    public static final String ADD_PERMISSION_SUCCESS = "新增权限成功";
+    public static final String EDIT_PERMISSION_SUCCESS = "编辑权限成功";
+    public static final String EDIT_PERMISSION_FAIL = "编辑权限失败";
+    public static final String DELETE_PERMISSION_SUCCESS = "删除权限成功";
+    public static final String DELETE_PERMISSION_FAIL = "删除权限失败";
 }
