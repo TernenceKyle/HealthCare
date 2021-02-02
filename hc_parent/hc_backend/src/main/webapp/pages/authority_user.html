@@ -435,8 +435,6 @@
                         } else {
                             this.$message.error(res.data.message);
                         }
-                    }).catch((r) => {
-                        this.showMessage(r);
                     }).finally(() => {
                         this.findPage();
                     });

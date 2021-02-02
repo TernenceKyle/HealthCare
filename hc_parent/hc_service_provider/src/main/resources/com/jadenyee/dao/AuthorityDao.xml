@@ -19,9 +19,45 @@
         select * from t_role
     </select>
     <!--根据id查询角色-->
+    <select id="findAllRoleById" parameterType="int" resultType="com.jadenyee.pojo.Role">
+        select * from t_role where id = #{id}
+    </select>
+    <!--根据条件查询全部角色-->
+    <select id="findRoleByQueryString" parameterType="string" resultType="com.jadenyee.pojo.Role">
+        select * from t_role
+        <if test="value != null and value.length > 0">
+            where name like '%${value}%' or keyword like '%${value}%'
+        </if>
+    </select>
+    <!--添加角色-->
+    <insert id="roleAdd" parameterType="com.jadenyee.pojo.Role">
+        insert into t_role(name,keyword,description)
+        values (#{name},#{keyword},#{description})
+    </insert>
+    <!--根据id查询角色-->
     <select id="findAllUser" resultType="com.jadenyee.pojo.User">
         select username,gender,birthday,remark,telephone,station from t_user where id = #{id}
     </select>
+    <!--编辑角色信息-->
+    <update id="editRole" parameterType="com.jadenyee.pojo.Role">
+        UPDATE t_role
+        <set>
+            <if test="name!= null">
+                name = #{name},
+            </if>
+            <if test="keyword != null">
+                keyword = #{keyword},
+            </if>
+            <if test="description != null">
+                description = #{description},
+            </if>
+        </set>
+        WHERE id = #{id}
+    </update>
+    <!--删除角色-->
+    <delete id="deleteRole" parameterType="int">
+        delete from t_role where id = #{id}
+    </delete>
     <!--编辑用户信息-->
     <update id="editUser" parameterType="com.jadenyee.pojo.User">
         UPDATE t_user
@@ -67,6 +103,7 @@
       insert into t_user_role
       values (#{userId},#{roleId})
     </insert>
+
     <!--查询全部权限-->
     <select id="findAllPermission" resultType="com.jadenyee.pojo.Permission">
         select * from t_permission

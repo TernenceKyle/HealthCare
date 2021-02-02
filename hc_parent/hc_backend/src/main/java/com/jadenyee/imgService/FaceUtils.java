@@ -24,9 +24,9 @@ import java.util.List;
 @Service
 public class FaceUtils{
     private static final Logger LOGGER = LoggerFactory.getLogger(FaceUtils.class);
-    private String appid = "EbeaxoU21kebKUgUNGh1eSZ4VAPdZXXF9yrmcJ6tYSm1";
-    private String sdkKey = "8k2J2VxBM9BMZTuT3NDcg14YsMengwpgzFxsF4eEsqDt";
-    private String libPath = "C:\\Users\\Ezzra\\Desktop\\ArcSoft_ArcFace_Java_Windows_x64_V3.0\\libs\\WIN64";
+    private String appid = "4YDdLoBbRpKoev6EvDcrM9AwfTZPxYD51xy7mkvKUrU9";
+    private String sdkKey = "3p2AyktCWCPymdtsWq4tyN5Pa4Z4ffLuauMXqoGnaq8G";
+    private String libPath = "D:/code/ArcSoft/libs/WIN64";
     private FaceEngine faceEngine;
     @PostConstruct
     public void init(){

@@ -72,6 +72,10 @@ public class MessageConstant {
     public static final String QUERY_USER_FAIL = "查询用户失败";
     public static final String QUERY_ROLE_SUCCESS = "查询角色成功";
     public static final String QUERY_ROLE_FAIL = "查询角色失败";
+    public static final String ADD_ROLE_SUCCESS = "新增角色成功";
+    public static final String ADD_ROLE_FAIL = "新增角色的角色失败";
+    public static final String DELETE_ROLE_SUCCESS = "删除角色成功";
+    public static final String DELETE_ROLE_FAIL = "删除角色的角色失败";
     public static final String EDIT_USER_SUCCESS = "编辑用户成功";
     public static final String EDIT_USER_FAIL = "编辑用户失败";
     public static final String DELETE_USER_SUCCESS = "删除用户成功";

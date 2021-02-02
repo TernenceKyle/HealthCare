@@ -11,7 +11,7 @@ import com.jadenyee.service.AuthorityService;
 import org.apache.dubbo.config.annotation.Reference;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
@@ -131,6 +131,43 @@ public class AuthorityController {
             return new Result(false,MessageConstant.QUERY_ROLE_FAIL);
         }
     }
+    //根据条件查询角色
+    @RequestMapping("/roleListByQueryString")
+    public Result roleListByQueryString (String queryString){
+
+        try {
+            queryString = new String(queryString.getBytes("ISO-8859-1"),"utf-8");
+            List<Role> allRole = authorityService.findRoleByQueryString(queryString);
+            return new Result(true,MessageConstant.QUERY_ROLE_SUCCESS,allRole);
+        }catch (Exception e){
+            e.printStackTrace();
+            return new Result(false,MessageConstant.QUERY_ROLE_FAIL);
+        }
+    }
+
+    //添加角色
+    @RequestMapping("/roleAdd")
+    public Result roleAdd(@RequestBody Role role){
+        try {
+            authorityService.roleAdd(role);
+            return new Result(true, MessageConstant.ADD_ROLE_SUCCESS);
+        }catch (Exception e){
+            e.printStackTrace();
+            return new Result(false,MessageConstant.ADD_ROLE_FAIL);
+        }
+    }
+    //根据id查询角色
+    @RequestMapping("/findAllRoleById")
+    public Result findAllRoleById(Integer id){
+        try {
+            Role role = authorityService.findAllRoleById(id);
+            return new Result(true, MessageConstant.QUERY_ROLE_SUCCESS,role);
+        }catch (Exception e){
+            e.printStackTrace();
+            return new Result(false,MessageConstant.QUERY_ROLE_FAIL);
+        }
+    }
+
     //查询全部的权限
     @RequestMapping("/findAllPermission")
     public Result findAllPermission(){
@@ -153,6 +190,17 @@ public class AuthorityController {
             return new Result(false,MessageConstant.QUERY_PERMISSION_FAIL);
         }
     }
+    //编辑角色信息
+    @RequestMapping("/editRole")
+    public Result editRole (Integer roleId,@RequestBody Role role){
+        try {
+            authorityService.editRole(role,roleId);
+            return new Result(true,MessageConstant.EDIT_USER_SUCCESS);
+        }catch (Exception e){
+            e.printStackTrace();
+            return new Result(false,MessageConstant.EDIT_USER_FAIL);
+        }
+    }
     //修改角色的权限
     @RequestMapping("/rolePermissionAdd")
     public Result rolePermissionAdd (Integer roleId,@RequestBody List<Integer> permissionIds){
@@ -162,6 +210,18 @@ public class AuthorityController {
         }catch (Exception e){
             e.printStackTrace();
             return new Result(false,MessageConstant.ADD_ROLE_PERMISSION_FAIL);
+        }
+    }
+
+    //删除角色
+    @RequestMapping("/deleteRole")
+    public Result deleteRole (Integer id){
+        try {
+            authorityService.deleteRole(id);
+            return new Result(true,MessageConstant.DELETE_ROLE_SUCCESS);
+        }catch (Exception e){
+            e.printStackTrace();
+            return new Result(false,MessageConstant.DELETE_ROLE_FAIL);
         }
     }
 
