@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.jadenyee.dao.AuthorityDao">
+    <!--分页查询用户-->
+    <select id="findUserList" parameterType="String" resultType="com.jadenyee.pojo.User">
+        select id,username,gender,birthday,telephone,station,remark from t_user
+        <if test="value != null and value.length > 0">
+            where username like '%${value}%'
+        </if>
+    </select>
+    <!--新增用户-->
+    <insert id="userAdd" parameterType="com.jadenyee.pojo.User">
+        insert into t_user(username,password,gender,birthday,remark,telephone,station)
+        values (#{username},#{password},#{gender},#{birthday},#{remark},#{telephone},#{station})
+    </insert>
+    <!--查询全部角色-->
+    <select id="findAllRole" resultType="com.jadenyee.pojo.Role">
+        select * from t_role
+    </select>
+    <!--根据id查询角色-->
+    <select id="findAllUser" resultType="com.jadenyee.pojo.User">
+        select username,gender,birthday,remark,telephone,station from t_user where id = #{id}
+    </select>
+    <!--编辑用户信息-->
+    <update id="editUser" parameterType="com.jadenyee.pojo.User">
+        UPDATE t_user
+        <set>
+            <if test="username!= null">
+                username = #{username},
+            </if>
+            <if test="password != null">
+                password = #{password},
+            </if>
+            <if test="gender != null">
+                gender = #{gender},
+            </if>
+            <if test="birthday != null">
+                birthday = #{birthday},
+            </if>
+            <if test="remark != null">
+                remark = #{remark},
+            </if>
+            <if test="station != null">
+                station = #{station},
+            </if>
+            <if test="telephone != null">
+                telephone = #{telephone},
+            </if>
+        </set>
+        WHERE id = #{id}
+    </update>
+    <!--删除用户-->
+    <delete id="deleteUser" parameterType="int">
+        delete from t_user where id = #{id}
+    </delete>
+    <!--查询用户的全部角色-->
+    <select id="findRolesByUser" parameterType="int" resultType="int">
+        select role_id from t_user_role where user_id = #{id}
+    </select>
+    <!--删除指定用户的角色-->
+    <delete id="deleteUserRole" parameterType="int">
+        delete from t_user_role where user_id = #{id}
+    </delete>
+    <!--添加指定用户的指定角色-->
+    <insert id="addUserRole" >
+      insert into t_user_role
+      values (#{userId},#{roleId})
+    </insert>
+    <!--查询全部权限-->
+    <select id="findAllPermission" resultType="com.jadenyee.pojo.Permission">
+        select * from t_permission
+    </select>
+    <!--通过角色id查询拥有的权限id-->
+    <select id="findPermissionsByRole" parameterType="int" resultType="int">
+        select permission_id from t_role_permission where role_id = #{id}
+    </select>
+    <!--删除指定角色的权限-->
+    <delete id="deleteRolePermission" parameterType="int">
+        delete from t_role_permission where role_id = #{roleId}
+    </delete>
+    <!--添加指定角色的指定权限-->
+    <insert id="addRolePermission">
+        insert into t_role_permission
+        values (#{roleId},#{perId})
+    </insert>
+    <!--分页查询权限-->
+    <select id="findPermissionList" parameterType="String" resultType="com.jadenyee.pojo.Permission">
+        select id,name,keyword,description from t_permission
+        <if test="value != null and value.length > 0">
+            where name like '%${value}%' or keyword like '%${value}%' or description like '%${value}%'
+        </if>
+    </select>
+    <!--添加权限-->
+    <insert id="permissionAdd" parameterType="com.jadenyee.pojo.Permission">
+        insert into t_permission(name,keyword,description)
+        values (#{name},#{keyword},#{description})
+    </insert>
+    <!--根据权限id查询单条权限-->
+    <select id="getPermission" parameterType="int" resultType="com.jadenyee.pojo.Permission">
+        select * from t_permission where id = #{id}
+    </select>
+    <!--修改权限-->
+    <update id="updatePermission" parameterType="com.jadenyee.pojo.Permission">
+        UPDATE t_permission
+        <set>
+            <if test="name!= null">
+                name = #{name},
+            </if>
+            <if test="keyword != null">
+                 keyword = #{keyword},
+            </if>
+            <if test="description != null">
+               description = #{description},
+            </if>
+        </set>
+        WHERE id = #{id}
+    </update>
+    <!--删除角色_权限表中的对应数据-->
+    <delete id="deletePermissionOne" parameterType="int">
+        DELETE FROM t_role_permission WHERE permission_id = #{id}
+    </delete>
+    <!--删除权限数据-->
+    <delete id="deletePermissionTwo" parameterType="int">
+        DELETE FROM t_permission WHERE id = #{id}
+    </delete>
+</mapper>

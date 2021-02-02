@@ -1,5 +1,7 @@
 package com.jadenyee.pojo;
 
+import org.springframework.format.annotation.DateTimeFormat;
+
 import java.io.Serializable;
 import java.util.Date;
 import java.util.HashSet;
@@ -8,8 +10,9 @@ import java.util.Set;
 /**
  * 用户
  */
-public class User implements Serializable{
+public class User implements Serializable {
     private Integer id; // 主键
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
     private Date birthday; // 生日
     private String gender; // 性别
     private String username; // 用户名，唯一
@@ -17,6 +20,7 @@ public class User implements Serializable{
     private String remark; // 备注
     private String station; // 状态
     private String telephone; // 联系电话
+    private String avatar;
     private Set<Role> roles = new HashSet<Role>(0);//对应角色集合
 
     public Integer getId() {
@@ -91,6 +95,17 @@ public class User implements Serializable{
         this.roles = roles;
     }
 
+    public String getAvatar() {
+        return avatar;
+    }
+
+    public void setAvatar(String avatar) {
+        this.avatar = avatar;
+    }
+
+    public User() {
+    }
+
     @Override
     public String toString() {
         return "User{" +
@@ -102,6 +117,7 @@ public class User implements Serializable{
                 ", remark='" + remark + '\'' +
                 ", station='" + station + '\'' +
                 ", telephone='" + telephone + '\'' +
+                ", avatar='" + avatar + '\'' +
                 ", roles=" + roles +
                 '}';
     }

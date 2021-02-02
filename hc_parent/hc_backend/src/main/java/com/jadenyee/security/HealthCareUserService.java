@@ -4,6 +4,7 @@ import com.jadenyee.pojo.Permission;
 import com.jadenyee.pojo.Role;
 import com.jadenyee.pojo.User;
 import com.jadenyee.service.UserService;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.dubbo.config.annotation.Reference;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
@@ -16,6 +17,7 @@ import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.Set;
 
 @Component
@@ -37,6 +39,9 @@ public class HealthCareUserService implements UserDetailsService {
         User loginUser = service.getUserByUsername(username);
         if (loginUser == null) {
             return null;
+        }
+        if (Objects.equals(Integer.valueOf(loginUser.getStation()),0)){
+           return null;
         }
         String password = loginUser.getPassword();
         List<GrantedAuthority> authenticationList = new ArrayList<>();
