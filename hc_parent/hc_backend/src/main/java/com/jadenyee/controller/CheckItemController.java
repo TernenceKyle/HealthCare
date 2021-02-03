@@ -1,5 +1,6 @@
 package com.jadenyee.controller;
 
+import com.jadenyee.annotations.Log;
 import com.jadenyee.constant.MessageConstant;
 import com.jadenyee.entity.PageResult;
 import com.jadenyee.entity.QueryPageBean;
@@ -29,6 +30,7 @@ public class CheckItemController {
      */
     @PostMapping("/add")
     @PreAuthorize("hasAuthority('CHECKITEM_ADD')")
+    @Log(title = "新增检测项",operation = Log.OPERA_TYPE_EDIT)
     public Result addCheckItem(@RequestBody CheckItem item) {
         try {
             service.addCheckItem(item);
@@ -48,6 +50,7 @@ public class CheckItemController {
 
     @RequestMapping("/delete")
     @PreAuthorize("hasAuthority('CHECKITEM_DELETE')")
+    @Log(title = "删除检测项",operation = Log.OPERA_TYPE_DEL)
     public Result deleteCheckItem(@RequestBody CheckItem item) throws Exception {
         try {
             service.deleteCheckItem(item.getId());
@@ -64,6 +67,7 @@ public class CheckItemController {
      */
     @PostMapping("/itemlist")
     @PreAuthorize("hasAuthority('CHECKITEM_QUERY')")
+    @Log(title = "查看检查项列表信息",operation = Log.OPERA_TYPE_SELECT)
     public PageResult itemList(@RequestBody QueryPageBean bean) {
         List<CheckItem> byItem = null;
         try {
@@ -100,6 +104,7 @@ public class CheckItemController {
      */
     @PreAuthorize("hasAuthority('CHECKITEM_UPDATE')")
     @PostMapping("/update")
+    @Log(title = "编辑检测项",operation = Log.OPERA_TYPE_EDIT)
     public Result updateCheckItem(@RequestBody CheckItem item){
         try{
             service.updateCheckItem(item);

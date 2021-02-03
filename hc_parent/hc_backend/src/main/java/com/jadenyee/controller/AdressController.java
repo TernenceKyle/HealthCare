@@ -1,6 +1,7 @@
 package com.jadenyee.controller;
 
 import com.github.pagehelper.Page;
+import com.jadenyee.annotations.Log;
 import com.jadenyee.entity.PageResult;
 import com.jadenyee.entity.QueryPageBean;
 import com.jadenyee.entity.Result;
@@ -23,6 +24,7 @@ public class AdressController {
      * @return 返回地址集合封装
      */
     @GetMapping("/list")
+    @Log(title = "查询机构地址信息(地图预览)",operation = Log.OPERA_TYPE_SELECT)
     public Result getAddressList() {
         try {
             List<Address> addresses = service.addressList();
@@ -39,6 +41,7 @@ public class AdressController {
      * @return 返回 PageRedult 封装对象
      */
     @PostMapping("/findPage")
+    @Log(title = "查询地址列表信息",operation = Log.OPERA_TYPE_SELECT)
     public PageResult getAddressByBean(@RequestBody QueryPageBean bean){
         try {
             Page<Address> page = service.getAddressByPage(bean);
@@ -54,6 +57,7 @@ public class AdressController {
      * @return 返回操作结果封装
      */
     @PostMapping("/add")
+    @Log(title = "新增地点信息",operation = Log.OPERA_TYPE_EDIT)
     public Result addAddress(@RequestBody Address addr){
         try{
             boolean b = service.addAddress(addr);
@@ -70,6 +74,7 @@ public class AdressController {
      * @return 返回操作结果
      */
     @DeleteMapping("/delete")
+    @Log(title = "删除地点信息",operation = Log.OPERA_TYPE_DEL)
     public Result delAddress(Integer id){
         try{
             System.out.println(this.getClass().getName()+" =>>> "+id);

@@ -1,5 +1,6 @@
 package com.jadenyee.controller;
 
+import com.jadenyee.annotations.Log;
 import com.jadenyee.constant.MessageConstant;
 import com.jadenyee.entity.Result;
 import com.jadenyee.service.MemberService;
@@ -44,6 +45,7 @@ public class ReportController {
      * @return 封装的数据集合
      */
     @GetMapping("/getMemberReport")
+    @Log(title = "查询会员年度信息数据统计",operation = Log.OPERA_TYPE_SELECT)
     public Result getMemberStatistics() {
         try {
             Map<String, List> res = memberService.getMemberStatistics4PastYear();
@@ -60,6 +62,7 @@ public class ReportController {
      * @return 返回数据封装
      */
     @GetMapping("/getSetmealReport")
+    @Log(title = "查询套餐预约统计数据",operation = Log.OPERA_TYPE_SELECT)
     public Result getSetmealReport() {
         try {
             Map<String, List> res = setmealService.getSetmealStatistics();
@@ -76,6 +79,7 @@ public class ReportController {
      * @return 返回数据封装
      */
     @GetMapping("/getBusinessReportData")
+    @Log(title = "查询运营数据报表信息",operation = Log.OPERA_TYPE_SELECT)
     public Result getDailyReport() {
         try {
             Map<String, Object> businessStat = this.getBusinessStat();
@@ -93,6 +97,7 @@ public class ReportController {
      * @return 返回消息数据封装结果
      */
     @RequestMapping("/exportBusinessReport")
+    @Log(title = "导出经营数据Excel表格",operation = Log.OPERA_TYPE_SELECT)
     public Result exportBusinessReport(HttpServletRequest request, HttpServletResponse response) {
         try {
             String reportDate = LocalDate.now().toString();
@@ -184,6 +189,7 @@ public class ReportController {
      * @return 返回一个结果封装
      */
     @RequestMapping("/exportBusinessReportPDF")
+    @Log(title = "导出经营数据报表(PDF)",operation = Log.OPERA_TYPE_SELECT)
     public Result exportBusinessReportPDF(HttpServletRequest request, HttpServletResponse response) {
         try {
             Map<String, Object> businessStat = this.getBusinessStat();
