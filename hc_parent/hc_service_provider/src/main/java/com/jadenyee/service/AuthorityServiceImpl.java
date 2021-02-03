@@ -60,11 +60,25 @@ public class AuthorityServiceImpl implements AuthorityService {
         List<Role> role = authorityDao.findAllRole();
         return role;
     }
+    //查询所有的角色
+    @Override
+    public List<Role> findRoleByQueryString(String queryString) {
+        if (queryString == null){
+            queryString = "";
+        }
+        List<Role> role = authorityDao.findRoleByQueryString(queryString);
+        return role;
+    }
     //查询当前用户拥有的角色
     @Override
     public List<Integer> findRolesByUser(Integer id) {
         List<Integer> roles = authorityDao.findRolesByUser(id);
         return roles;
+    }
+    //查询当前用户拥有的角色
+    @Override
+    public void deleteRole(Integer id) {
+        authorityDao.deleteRole(id);
     }
 
     //查询全部权限
@@ -136,6 +150,23 @@ public class AuthorityServiceImpl implements AuthorityService {
         }
         //删除用户
         authorityDao.deleteUser(id);
+    }
+
+    //添加角色
+    @Override
+    public void roleAdd(Role role) {
+        authorityDao.roleAdd(role);
+    }
+    //根据id查询角色
+    @Override
+    public Role findAllRoleById(Integer id) {
+       return authorityDao.findAllRoleById(id);
+    }
+    //编辑角色
+    @Override
+    public void editRole(Role role ,Integer id) {
+        role.setId(id);
+        authorityDao.editRole(role);
     }
 
     //修改角色的权限

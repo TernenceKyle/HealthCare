@@ -16,6 +16,8 @@ public interface AuthorityService {
     public PageResult findPage(QueryPageBean queryPageBean);
     public void userAdd(User user);
     public List<Role> findAllRole();
+    public Role findAllRoleById(Integer id);
+    public List<Role> findRoleByQueryString(String queryString);
     public List<Integer> findRolesByUser(Integer id);
     public List<Permission> findAllPermission();
     public List<Integer> findPermissionsByRole(Integer id);
@@ -29,4 +31,7 @@ public interface AuthorityService {
     public User findAllUser(Integer id);
     public void editUser(User user);
     public void deleteUser(Integer id);
+    public void roleAdd(Role role);
+    public void deleteRole(Integer id);
+    public void editRole(Role role,Integer id);
 }
