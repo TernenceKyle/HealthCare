@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>传智健康</title>
+    <meta name="description" content="传智健康">
+    <meta name="keywords" content="传智健康">
+    <meta content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no" name="viewport">
+    <!-- 引入样式 -->
+    <link rel="stylesheet" href="../plugins/elementui/index.css">
+    <link rel="stylesheet" href="../plugins/font-awesome/css/font-awesome.min.css">
+    <link rel="stylesheet" href="../css/style.css">
+</head>
+<body class="hold-transition">
+<div id="app">
+    <div class="content-header">
+        <h1>工作台<small>用户日志</small></h1>
+        <el-breadcrumb separator-class="el-icon-arrow-right" class="breadcrumb">
+            <el-breadcrumb-item :to="{ path: '/' }">首页</el-breadcrumb-item>
+            <el-breadcrumb-item>工作台</el-breadcrumb-item>
+            <el-breadcrumb-item>用户日志</el-breadcrumb-item>
+        </el-breadcrumb>
+    </div>
+    <div class="app-container">
+        <div class="box">
+            <div class="filter-container">
+                <el-input placeholder="用户名" v-model="pagination.queryString" style="width: 200px;"
+                          class="filter-item"></el-input>
+                <el-button @click="findSearch()" class="dalfBut">查询</el-button>
+            </div>
+            <el-table size="small" current-row-key="id" :data="dataList" stripe highlight-current-row>
+                <el-table-column type="index" align="center" label="序号"></el-table-column>
+                <el-table-column prop="username" label="用户名" align="center"></el-table-column>
+                <el-table-column prop="ipAddress" label="ip地址" align="center"></el-table-column>
+                <el-table-column prop="operation" label="用户行为" align="center"></el-table-column>
+                <el-table-column label="操作结果" align="center">
+                    <template slot-scope="scope">
+                        <span>{{ scope.row.executionResult == true ? '成功' : '失败'}}</span>
+                    </template>
+                </el-table-column>
+                <el-table-column prop="operationTime" label="操作时间" align="center"></el-table-column>
+                <el-table-column label="异常信息" align="center">
+                    <template slot-scope="scope">
+                        <span>{{ scope.row.exceptionInfo == null ? '无' : scope.row.exceptionInfo }}</span>
+                    </template>
+                </el-table-column>
+            </el-table>
+            <div class="pagination-container">
+                <el-pagination
+                        class="pagiantion"
+                        @current-change="handleCurrentChange"
+                        :current-page="pagination.currentPage"
+                        :page-size="pagination.pageSize"
+                        layout="total, prev, pager, next, jumper"
+                        :total="pagination.total">
+                </el-pagination>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+<!-- 引入组件库 -->
+<script src="../js/vue.js"></script>
+<script src="../plugins/elementui/index.js"></script>
+<script type="text/javascript" src="../js/jquery.min.js"></script>
+<script src="../js/axios-0.18.0.js"></script>
+<script>
+    var vue = new Vue({
+        el: '#app',
+        data: {
+            pagination: {//分页相关模型数据
+                currentPage: 1,//当前页码
+                pageSize: 10,//每页显示的记录数
+                total: 0,//总记录数
+                queryString: null//查询条件
+            },
+            dataList: [],//当前页要展示的分页列表数据
+        },
+        created(){
+            this.findPage();
+        },methods:{
+            findSearch() {
+                var queryParam = {
+                    currentPage: 1,
+                    pageSize: 10,
+                    queryString: this.pagination.queryString,
+                }
+                axios.post("/log/userLogByPage.do", queryParam).then((res) => {
+                    this.pagination.total = res.data.total;
+                    this.dataList = res.data.rows;
+                    this.pagination.currentPage = 1;
+                }).catch((r) => {
+                    // this.showMessage(r);
+                })
+            },
+            findPage() {
+                var queryParam = {
+                    currentPage: this.pagination.currentPage,
+                    pageSize: this.pagination.pageSize,
+                    queryString: this.pagination.queryString,
+                }
+                axios.post("/log/userLogByPage.do", queryParam).then((res) => {
+                    this.pagination.total = res.data.total;
+                    this.dataList = res.data.rows;
+                }).catch((r) => {
+                    // this.showMessage(r);
+                })
+            },
+            handleCurrentChange(currentPage) {
+                this.pagination.currentPage = currentPage;
+                this.findPage()
+            }
+        }
+    });
+</script>
+</html>

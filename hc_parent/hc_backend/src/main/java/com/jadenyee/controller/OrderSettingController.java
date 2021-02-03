@@ -1,5 +1,6 @@
 package com.jadenyee.controller;
 
+import com.jadenyee.annotations.Log;
 import com.jadenyee.constant.MessageConstant;
 import com.jadenyee.entity.Result;
 import com.jadenyee.pojo.OrderSetting;
@@ -27,6 +28,7 @@ public class OrderSettingController {
      * @return 操作响应结果
      */
     @PostMapping("/upload")
+    @Log(title = "上传预约设置Excel文件",operation = Log.OPERA_TYPE_EDIT)
     public Result uploadExcel(@RequestParam("excelFile") MultipartFile excel){
         try {
             //使用 POI 工具类读取表格数据的内容
@@ -65,6 +67,7 @@ public class OrderSettingController {
      * @return 当前月的所有预约信息
      */
     @PostMapping("/monthSchedule")
+    @Log(title = "查询预约设置信息(每月)",operation = Log.OPERA_TYPE_SELECT)
     public List<Map> getOrdersettingByMonth(@RequestBody Date date){
         date.setDate(1);
         Date start = (Date) date.clone();
@@ -88,6 +91,7 @@ public class OrderSettingController {
      * @return 返回执行结果封装
      */
     @PostMapping("/order")
+    @Log(title = "设置预约设置",operation = Log.OPERA_TYPE_EDIT)
     public Result setOrder(@RequestBody OrderSetting orderSetting){
         boolean b = service.setOrder(orderSetting);
         if (b){
