@@ -59,7 +59,12 @@
     </div>
     <div class="app-container">
         <div class="box">
-
+            <div class="filter-container">
+                <el-input placeholder="角色名" v-model="queryString" style="width: 200px;"
+                          class="filter-item" @keyup.enter.native="handleFilter"></el-input>
+                <el-button @click="findSearch()" class="dalfBut">查询</el-button>
+                <el-button type="primary" class="butT" @click="handleUser()">新建角色</el-button>
+            </div>
             <el-table size="small" current-row-key="id" :data="dataList" stripe highlight-current-row>
                 <el-table-column type="index" label="序号" align="center" ></el-table-column>
                 <el-table-column prop="name" label="角色名" align="center"></el-table-column>
@@ -67,40 +72,106 @@
                 <el-table-column prop="description" label="角色描述" align="center"></el-table-column>
                 <el-table-column label="操作" align="center">
                     <template slot-scope="scope">
-                        <el-button type="primary" size="mini" @click="handlePermissions(scope.row)">添加权限</el-button>
+                        <el-button type="primary" size="mini" @click="handlePermissions(scope.row)">编辑</el-button>
+                        <el-button size="mini" type="danger" @click="handleDelete(scope.row)">删除</el-button>
                     </template>
                 </el-table-column>
                 </el-table-column>
             </el-table>
 
-            <!-- 添加权限弹层 -->
+            <!-- 新建角色标签弹层 -->
             <div class="add-form">
-                <el-dialog title="添加权限" :visible.sync="dialogFormVisible4Edit">
-                    <div>
-                        <table class="datatable">
-                            <thead>
-                            <tr>
-                                <th>序号</th>
-                                <th>权限名</th>
-                                <th>权限关键词</th>
-                                <th>权限描述</th>
-                                <th>选择</th>
-                            </tr>
-                            </thead>
-                            <tbody>
-                            <tr v-for="c in tableData">
-                                <td><label :for="c.id">{{c.id}}</label></td>
-                                <td><label :for="c.id">{{c.name}}</label></td>
-                                <td><label :for="c.id">{{c.keyword}}</label></td>
-                                <td><label :for="c.id">{{c.description}}</label></td>
-                                <td>
-                                    <input :id="c.id" v-model="checkitemIds" type="checkbox" :value="c.id">
-                                </td>
-                            </tr>
-                            </tbody>
-                        </table>
-                    </div>
+                <el-dialog title="新建用户" :visible.sync="dialogFormVisible">
 
+                    <el-form ref="dataAddForm" :model="formData"  label-position="right" label-width="100px">
+                        <el-row>
+                            <el-col :span="12">
+                                <el-form-item label="角色名" prop="name">
+                                    <el-input v-model="formData.name"/>
+                                </el-form-item>
+                            </el-col>
+                        </el-row>
+                        <el-row>
+                            <el-col :span="12">
+                                <el-form-item label="角色关键词" prop="keyword"  >
+                                    <el-input v-model="formData.keyword"></el-input>
+                                </el-form-item>
+                            </el-col>
+                        </el-row>
+                        <el-row>
+                            <el-col :span="24">
+                                <el-form-item label="角色描述">
+                                    <el-input v-model="formData.description" type="textarea"></el-input>
+                                </el-form-item>
+                            </el-col>
+                        </el-row>
+                    </el-form>
+
+                    <div slot="footer" class="dialog-footer">
+                        <el-button @click="dialogFormVisible = false">取消</el-button>
+                        <el-button type="primary" @click="handleRoleAdd()">确定</el-button>
+                    </div>
+                </el-dialog>
+            </div>
+
+            <!-- 编辑角色弹层 -->
+            <div class="add-form">
+                <el-dialog title="编辑角色" :visible.sync="dialogFormVisible4Edit">
+                    <template>
+                        <el-tabs v-model="activeName" type="card">
+                            <el-tab-pane label="用户信息" name="first">
+                                <el-form ref="dataAddForm" :model="formData"  label-position="right" label-width="100px">
+                                    <el-row>
+                                        <el-col :span="12">
+                                            <el-form-item label="角色名" prop="name">
+                                                <el-input v-model="formData.name"/>
+                                            </el-form-item>
+                                        </el-col>
+                                    </el-row>
+                                    <el-row>
+                                        <el-col :span="12">
+                                            <el-form-item label="角色关键词" prop="keyword"  >
+                                                <el-input v-model="formData.keyword"></el-input>
+                                            </el-form-item>
+                                        </el-col>
+                                    </el-row>
+                                    <el-row>
+                                        <el-col :span="24">
+                                            <el-form-item label="角色描述">
+                                                <el-input v-model="formData.description" type="textarea"></el-input>
+                                            </el-form-item>
+                                        </el-col>
+                                    </el-row>
+                                </el-form>
+                            </el-tab-pane>
+                            <el-tab-pane label="添加权限" name="second">
+                                <div>
+                                    <table class="datatable">
+                                        <thead>
+                                        <tr>
+                                            <th>序号</th>
+                                            <th>权限名</th>
+                                            <th>权限关键词</th>
+                                            <th>权限描述</th>
+                                            <th>选择</th>
+                                        </tr>
+                                        </thead>
+                                        <tbody>
+                                        <tr v-for="c in tableData">
+                                            <td><label :for="c.id">{{c.id}}</label></td>
+                                            <td><label :for="c.id">{{c.name}}</label></td>
+                                            <td><label :for="c.id">{{c.keyword}}</label></td>
+                                            <td><label :for="c.id">{{c.description}}</label></td>
+                                            <td>
+                                                <input :id="c.id" v-model="checkitemIds" type="checkbox" :value="c.id">
+                                            </td>
+                                        </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </el-tab-pane>
+                        </el-tabs>
+                    </template>
                     <div slot="footer" class="dialog-footer">
                         <el-button @click="dialogFormVisible4Edit = false">取消</el-button>
                         <el-button type="primary" @click="handleRolePermission()">确定</el-button>
@@ -113,20 +184,33 @@
 </body>
 
 <script>
-
     var vue = new Vue({
         el: '#app',
         data: {
+            queryString: null,
+            activeName: 'first',
             role_id:null,//添加角色时所选用户的id
+            formData: {},//新建用户表单数据
             dataList: [],//列表数据
             tableData: [],//添加权限窗口中对应的权限列表数据
             checkitemIds: [],//添加角色对应的权限复选框，基于双向绑定可以进行回显和数据提交
+            dialogFormVisible: false,//控制新建角色窗口显示/隐藏
             dialogFormVisible4Edit: false,//控制添加权限窗口显示/隐藏
         },
         created() {
             this.findRoleList();
         },
         methods: {
+            //查询按钮
+            findSearch() {
+                axios.get("/authority/roleListByQueryString.do?queryString=" + this.queryString).then((res) => {
+                    if (res.data.flag){
+                        this.dataList = res.data.data;
+                    } else {
+                        this.$message.error(res.data.message);
+                    }
+                });
+            },
 
             //查询全部角色列表数据
             findRoleList() {
@@ -141,12 +225,54 @@
 
             // 重置表单
             resetForm() {
+                this.formData = {};
                 this.checkitemIds = [];
             },
+
+            // 弹出添加用户窗口
+            handleUser() {
+                this.resetForm();
+                this.dialogFormVisible = true;
+
+            },
+            // 添加用户
+            handleRoleAdd() {
+                this.$refs['dataAddForm'].validate((valid) => {
+                    if (valid) {
+                        axios.post("/authority/roleAdd.do" ,this.formData).then((res) => {
+                            if (res.data.flag) {
+                                this.$message({
+                                    message: res.data.message,
+                                    type: 'success'
+                                });
+                            } else {
+                                this.$message.error(res.data.message);
+                            }
+                        }).finally(() => {
+                            this.findPage();
+                        });
+                        this.dialogFormVisible = false;
+                    }else {
+                        this.$message.error("表单数据校验失败");
+                        return false;
+                    }
+                }).finally(() => {
+                    this.findRoleList();
+                });
+            },
+
             // 弹出添加权限窗口
             handlePermissions(row) {
                 this.resetForm();
+                this.activeName = 'first';
                 role_id = row.id;
+                axios.get("/authority/findAllRoleById.do?id=" + row.id).then((res)=>{
+                    if (res.data.flag){
+                        this.formData = res.data.data;
+                    } else {
+                        this.$message.error(res.data.message);
+                    }
+                });
                 //查询全部的权限
                 axios.get("/authority/findAllPermission.do").then((res)=>{
                     if (res.data.flag){
@@ -169,22 +295,54 @@
             },
             //添加角色对应的权限
             handleRolePermission() {
-                axios.post("/authority/rolePermissionAdd.do?roleId=" + role_id ,this.checkitemIds).then((res) => {
+                axios.post("/authority/editRole.do?roleId=" + role_id ,this.formData).then((res) => {
                     if (res.data.flag) {
-                        this.$message({
-                            message: res.data.message,
-                            type: 'success'
+                        axios.post("/authority/rolePermissionAdd.do?roleId=" + role_id ,this.checkitemIds).then((res) => {
+                            if (res.data.flag) {
+                                this.$message({
+                                    message: res.data.message,
+                                    type: 'success'
+                                });
+                            } else {
+                                this.$message.error(res.data.message);
+                            }
                         });
                     } else {
                         this.$message.error(res.data.message);
                     }
                 }).finally(() => {
-                    this.findPage();
+                    this.findRoleList();
                 });
                 this.dialogFormVisible4Edit = false;
-            }
-        },
+            },
 
+
+
+            // 删除
+            handleDelete(row) {
+                this.$confirm("确认删除吗？", "提示", {type: 'warning'}).then(() => {
+                    axios.get("/authority/deleteRole.do?id=" + row.id).then((res) => {
+                        if (res.data.flag) {
+                            this.$message({
+                                message: res.data.message,
+                                type: 'success'
+                            });
+                        } else {
+                            this.$message.error(res.data.message);
+                        }
+                    }).finally(() => {
+                        this.findRoleList();
+                    });
+                }).catch(() => {
+                    this.$message({
+                        message: '操作已取消',
+                        type: 'info'
+                    });
+                });
+            },
+
+
+        }
     })
 
 </script>

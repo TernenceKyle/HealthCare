@@ -9,6 +9,7 @@ import com.jadenyee.imgService.FaceUtils;
 import com.jadenyee.pojo.User;
 import com.jadenyee.service.UserService;
 import com.jadenyee.utils.QiniuUtils;
+import io.netty.handler.codec.http.HttpRequest;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.dubbo.config.annotation.Reference;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,6 +17,8 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -34,10 +37,11 @@ public class UserController {
      * @return 返回结果封装
      */
     @GetMapping("/getUsername")
-    public Result getUsername(){
+    public Result getUsername(HttpServletRequest request){
         try {
             org.springframework.security.core.userdetails.User user1 = (org.springframework.security.core.userdetails.User)SecurityContextHolder.getContext().getAuthentication().getPrincipal();
             String username = user1.getUsername();
+            request.setAttribute("username",username);
             User userByUsername = userService.getUserByUsername(username);
             Map<String,Object> resMap = new HashMap<>();
             resMap.put("username",username);

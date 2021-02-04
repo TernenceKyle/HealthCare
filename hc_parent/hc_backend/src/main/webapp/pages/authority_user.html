@@ -175,7 +175,7 @@
                                             </el-form-item>
                                         </el-col>
                                         <el-col :span="12">
-                                            <el-form-item label="密码" prop="password"  >
+                                            <el-form-item label="密码">
                                                 <el-input type="password" v-model="formData.password"></el-input>
                                             </el-form-item>
                                         </el-col>
@@ -395,26 +395,32 @@
             },
             //编辑用户和角色信息
             handleUserRole() {
-                axios.post("/authority/editUser.do?userId=" + user_id ,this.formData).then((res) => {
-                    if (res.data.flag) {
-                        axios.post("/authority/userRoleAdd.do?userId=" + user_id ,this.checkitemIds).then((res) => {
+                this.$refs['dataAddForm'].validate((valid) => {
+                    if (valid) {
+                        axios.post("/authority/editUser.do?userId=" + user_id ,this.formData).then((res) => {
                             if (res.data.flag) {
-                                this.$message({
-                                    message: res.data.message,
-                                    type: 'success'
+                                axios.post("/authority/userRoleAdd.do?userId=" + user_id ,this.checkitemIds).then((res) => {
+                                    if (res.data.flag) {
+                                        this.$message({
+                                            message: res.data.message,
+                                            type: 'success'
+                                        });
+                                    } else {
+                                        this.$message.error(res.data.message);
+                                    }
                                 });
                             } else {
                                 this.$message.error(res.data.message);
                             }
+                        }).finally(() => {
+                            this.findPage();
                         });
-                    } else {
-                        this.$message.error(res.data.message);
+                        this.dialogFormVisible4Edit = false;
+                    }else {
+                        this.$message.error("表单数据校验失败");
+                        return false;
                     }
-                }).finally(() => {
-                    this.findPage();
                 });
-
-                this.dialogFormVisible4Edit = false;
 
             },
             // 删除
@@ -429,8 +435,6 @@
                         } else {
                             this.$message.error(res.data.message);
                         }
-                    }).catch((r) => {
-                        this.showMessage(r);
                     }).finally(() => {
                         this.findPage();
                     });

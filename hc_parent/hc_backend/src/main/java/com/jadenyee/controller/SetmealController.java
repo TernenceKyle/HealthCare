@@ -1,5 +1,6 @@
 package com.jadenyee.controller;
 
+import com.jadenyee.annotations.Log;
 import com.jadenyee.constant.MessageConstant;
 import com.jadenyee.constant.RedisConstant;
 import com.jadenyee.entity.PageResult;
@@ -37,6 +38,7 @@ public class SetmealController {
      * @author jadenYee
      */
     @PostMapping("/upload")
+    @Log(title = "上传套餐图片资源",operation = Log.OPERA_TYPE_EDIT)
     public Result uploadPic(@RequestParam("imgFile") MultipartFile file) {
         String filename = file.getOriginalFilename();
         //上传文件名的非空判断
@@ -68,6 +70,7 @@ public class SetmealController {
      * @return 返回页面封装信息
      */
     @PostMapping("/list")
+    @Log(title = "查询套餐数据列表",operation = Log.OPERA_TYPE_EDIT)
     public PageResult getSetmealList(@RequestBody QueryPageBean bean) {
         return service.getSetmealList(bean);
     }
@@ -80,6 +83,7 @@ public class SetmealController {
      * @author jadenYee
      */
     @PostMapping("/add")
+    @Log(title = "新增套餐数据",operation = Log.OPERA_TYPE_EDIT)
     public Result addSetmeal(@RequestBody Setmeal setmeal, Integer[] cgIds) {
         boolean res;
         try {
@@ -102,6 +106,7 @@ public class SetmealController {
      * @return 返回操作结果
      */
     @PostMapping("/update")
+    @Log(title = "编辑套餐信息",operation = Log.OPERA_TYPE_EDIT)
     public Result updateSetmeal(@RequestBody Setmeal setmeal, Integer[] cgIds) {
         boolean res;
         try {
@@ -123,6 +128,7 @@ public class SetmealController {
      * @return 返回一个业务执行结果
      */
     @GetMapping("/delete")
+    @Log(title = "删除套餐信息",operation = Log.OPERA_TYPE_DEL)
     public Result deleteSetmeal(Integer id) {
         boolean res;
         try {
@@ -132,7 +138,6 @@ public class SetmealController {
         }
         return new Result(res, "删除套餐数据成功!");
     }
-
     /**
      * 获取套餐信息（用于修改）
      *

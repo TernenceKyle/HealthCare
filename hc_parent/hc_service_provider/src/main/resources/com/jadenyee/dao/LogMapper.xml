@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jadenyee.dao.LogMapper">
+    <sql id="base">
+        SELECT id,username,ipAddress,operation,methodName,exceptionInfo,executionResult,operationTime FROM t_user_operation_log
+    </sql>
+    <select id="findAll" resultType="com.jadenyee.pojo.UserOperationLog">
+        <include refid="base"></include>
+    </select>
+    <insert id="add" parameterType="com.jadenyee.pojo.UserOperationLog">
+        INSERT INTO t_user_operation_log(username,ipAddress,operation,methodName,exceptionInfo,executionResult,operationTime)
+        VALUE (#{username},#{ipAddress},#{operation},#{methodName},#{exceptionInfo},#{executionResult},#{operationTime})
+    </insert>
+    <select id="findByCondition" resultType="com.jadenyee.pojo.UserOperationLog" parameterType="String">
+        <include refid="base"/>
+        <where>
+            username like #{value}
+        </where>
+    </select>
+</mapper>

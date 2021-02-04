@@ -23,6 +23,7 @@ import java.util.List;
 
 @Service
 public class FaceUtils{
+
     private static final Logger LOGGER = LoggerFactory.getLogger(FaceUtils.class);
     private String appid = "EbeaxoU21kebKUgUNGh1eSZ4VAPdZXXF9yrmcJ6tYSm1";
     private String sdkKey = "8k2J2VxBM9BMZTuT3NDcg14YsMengwpgzFxsF4eEsqDt";
