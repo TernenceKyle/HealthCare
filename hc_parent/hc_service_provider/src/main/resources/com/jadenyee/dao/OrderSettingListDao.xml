@@ -66,7 +66,7 @@
 
     <!--根据日期更新预约人数-->
     <update id="editReservationsByOrderDate" parameterType="com.jadenyee.pojo.OrderSetting">
-        update t_ordersetting set number = #{number} where orderDate = #{orderDate}
+        update t_ordersetting set reservations = #{reservations} where orderDate = #{orderDate}
     </update>
 
     <!--动态条件查询-->
