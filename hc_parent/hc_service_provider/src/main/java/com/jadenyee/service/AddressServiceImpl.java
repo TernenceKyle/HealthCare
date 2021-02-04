@@ -43,6 +43,11 @@ public class AddressServiceImpl implements AddressService{
         return mapper.findAll();
     }
 
+    @Override
+    public Address getAddress(Integer id) {
+        return mapper.findById(id);
+    }
+
     /**
      * 更新 地址
      * @param address

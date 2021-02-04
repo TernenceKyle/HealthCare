@@ -23,4 +23,9 @@ public class AddressController {
     public List<Address> getAddressList() {
         return service.addressList();
     }
+
+    @GetMapping("/get")
+    public Address getAddressInfo(Integer id){
+        return service.getAddress(id);
+    }
 }
