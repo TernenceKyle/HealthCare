@@ -9,6 +9,7 @@ import java.util.List;
 public interface AddressService {
     public Page<Address> getAddressByPage(QueryPageBean bean);
     public List<Address> addressList();
+    public Address getAddress(Integer id);
     public boolean updateAddress(Address address);
     public boolean deleteAddress(Integer id);
     public boolean addAddress(Address address);
